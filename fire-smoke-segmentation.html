@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fire and Smoke Semantic Segmentation — Mashalakh Mamedov</title>
+<meta name="description" content="One segmentation task, two methods, one metric. 0.8507 mean test F-measure against 0.4421 for a classical baseline — and a faulty reference mask worth about 4.48 points, kept in the results rather than dropped.">
+<meta name="author" content="Mashalakh Mamedov">
+<meta name="theme-color" content="#0d1117">
+<link rel="canonical" href="https://mashalakhmamedov.github.io/fire-smoke-segmentation.html">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Mashalakh Mamedov">
+<meta property="og:title" content="Fire and Smoke Semantic Segmentation — Mashalakh Mamedov">
+<meta property="og:description" content="One segmentation task, two methods, one metric. 0.8507 mean test F-measure against 0.4421 for a classical baseline — and a faulty reference mask worth about 4.48 points, kept in the results rather than dropped.">
+<meta property="og:url" content="https://mashalakhmamedov.github.io/fire-smoke-segmentation.html">
+<meta property="og:locale" content="en_GB">
+<meta property="og:image" content="https://mashalakhmamedov.github.io/assets/images/segmentation__fm_boxplot_network_vs_classical-1400.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Fire and Smoke Semantic Segmentation — Mashalakh Mamedov">
+<meta name="twitter:description" content="One segmentation task, two methods, one metric. 0.8507 mean test F-measure against 0.4421 for a classical baseline — and a faulty reference mask worth about 4.48 points, kept in the results rather than dropped.">
+<meta name="twitter:image" content="https://mashalakhmamedov.github.io/assets/images/segmentation__fm_boxplot_network_vs_classical-1400.webp">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="styles/site.css">
+</head>
+<body class="is-case">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="shell masthead__inner">
+    <a class="masthead__id" href="index.html">
+      <span class="masthead__name">Mashalakh Mamedov</span>
+      <span class="masthead__role">Mechatronics MSc Candidate</span>
+    </a>
+    <button class="masthead__toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+      <span class="masthead__toggle-bars" aria-hidden="true"></span>
+      <span class="u-visually-hidden">Menu</span>
+    </button>
+    <nav class="masthead__nav" id="primary-nav" aria-label="Primary">
+      <a href="index.html#projects">Projects</a>
+      <a href="index.html#experience">Experience</a>
+      <a href="index.html#skills">Skills</a>
+      <a href="index.html#contact">Contact</a>
+      <a class="masthead__cv" href="assets/files/Mashalakh_Mamedov_CV.pdf" download>CV</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<article class="case">
+  <header class="case__head">
+    <div class="shell shell--narrow">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="index.html">Projects</a><span aria-hidden="true"> / </span><span>Computer vision · Deep learning</span>
+      </nav>
+      <p class="kicker">Computer vision · Deep learning</p>
+      <h1 class="case__title">Fire and Smoke Semantic Segmentation</h1>
+      <p class="case__subtitle">DeepLabv3+ benchmarked against a classical colour baseline — and a fault found in the test labels</p>
+      <dl class="case__context">
+        <div><dt>Course</dt><dd>MSc Computer Vision</dd></div>
+        <div><dt>Institution</dt><dd>University of Rome Tor Vergata</dd></div>
+        <div><dt>Date</dt><dd>June–July 2026</dd></div>
+        <div><dt>Team</dt><dd>Two-person project — I owned the deep-learning workstream</dd></div>
+        <div><dt>Nature</dt><dd>Offline / research code</dd></div>
+      </dl>
+    </div>
+  </header>
+
+  <figure class="case__hero">
+    <div class="shell">
+      <img
+        class="case__heroimg"
+        src="assets/images/segmentation__fm_boxplot_network_vs_classical-1400.webp"
+        srcset="assets/images/segmentation__fm_boxplot_network_vs_classical-640.webp 640w, assets/images/segmentation__fm_boxplot_network_vs_classical-960.webp 960w, assets/images/segmentation__fm_boxplot_network_vs_classical-1400.webp 1400w"
+        sizes="(max-width: 1100px) 100vw, 1100px"
+        width="1400"
+        height="843"
+        loading="eager"
+        decoding="async"
+        alt="Boxplot comparing per-image F-measure distributions for the network and the classical baseline on training and test sets.">
+    </div>
+  </figure>
+
+  <div class="shell">
+    <dl class="metrics metrics--case">
+      <div class="metric"><dt class="metric__value">0.8507</dt><dd class="metric__label">network mean test F-measure</dd></div>
+<div class="metric"><dt class="metric__value">0.4421</dt><dd class="metric__label">classical baseline mean test F-measure</dd></div>
+<div class="metric"><dt class="metric__value">≈ 4.48 pp</dt><dd class="metric__label">mean F-measure cost of one faulty reference mask</dd></div>
+    </dl>
+  </div>
+
+  <div class="shell shell--narrow case__body">
+    
+<section class="case__block js-reveal" id="problem" aria-labelledby="problem-heading">
+  <p class="case__blocklabel">01</p>
+  <h2 class="case__blockheading" id="problem-heading">Problem</h2>
+  <div class="prose"><p>Label every pixel in an image as fire ∪ smoke foreground or background — and do it two different ways, so the two can be compared head to head on identical data with an identical metric. Method 1 is a deep network with transfer learning. Method 2 is a hand-crafted colour-threshold and morphology baseline.</p>
+<p>The point of the project is the controlled comparison, not either method on its own.</p></div>
+</section>
+
+    
+<section class="case__block js-reveal" id="ownership" aria-labelledby="ownership-heading">
+  <p class="case__blocklabel">02</p>
+  <h2 class="case__blockheading" id="ownership-heading">What I owned</h2>
+  <div class="prose"><p>I owned the deep-learning workstream end to end: the dataset pipeline that recovers binary masks from COCO polygon annotations, network setup and training, inference and evaluation on the held-out test set, the results scripts and comparison figures, the live demo driven in front of the professor, and the label-quality investigation below.</p><p class="attribution"><span class="attribution__label">Teammate's workstream</span>My teammate built the classical colour/morphology baseline and its exhaustive parameter search. We were both examined on both tracks.</p></div>
+</section>
+
+    
+<section class="case__block js-reveal" id="method" aria-labelledby="method-heading">
+  <p class="case__blocklabel">03</p>
+  <h2 class="case__blockheading" id="method-heading">Method</h2>
+  <div class="prose"><ol class="steps"><li>Converted the Roboflow COCO-segmentation export — 201 images at a native 256 × 256, exactly the network input size, so no rescaling — into binary MATLAB pixel-label masks. The export contains no mask image files, so ground truth is recovered from polygon coordinates via <code>poly2mask</code>, taking the union of all polygons.</li>
+<li>Split 141 training / 40 validation / 20 test.</li>
+<li>Trained DeepLabv3+ on a pretrained ResNet-18 backbone for 30 epochs with SGDM and a class-weighted loss, augmenting with random 0–360° rotation, X reflection and ±10 px translation, with image and mask transforms synchronised.</li>
+<li>My teammate's classical track used a redness cue for fire and a low-saturation mid-brightness cue for smoke plus morphological cleaning, with three parameters optimised by exhaustive search — 8 × 9 × 4 = 288 combinations per training image — then consolidated.</li>
+<li>Scored both methods with the same evaluation function on the same 20 test images. Headline metric is F-measure, FM = 2TP / (2TP + FP + FN).</li>
+<li>Reported per-image dispersion via boxplots rather than means alone, plus area-agreement scatter plots and best- and worst-case overlays.</li></ol></div>
+</section>
+
+    
+<section class="case__block js-reveal" id="result" aria-labelledby="result-heading">
+  <p class="case__blocklabel">04</p>
+  <h2 class="case__blockheading" id="result-heading">Result</h2>
+  <div class="prose"><p>The network reached a mean test F-measure of 0.8507 against the classical baseline's 0.4421 on identical data — roughly double. The median network F-measure on test was 0.913.</p>
+<p>The gap is widest on smoke, where a colour rule cannot separate grey smoke from sky or background. The baseline's worst test case scores 0.038 with the threshold flooding the frame.</p></div>
+</section>
+
+    
+<section class="case__block js-reveal" id="diagnosis" aria-labelledby="diagnosis-heading">
+  <p class="case__blocklabel">05</p>
+  <h2 class="case__blockheading" id="diagnosis-heading">What went wrong, and what the symptom meant</h2>
+  <div class="prose"><p>Two problems, and the second one is the reason this project is on the site.</p>
+<p>First, the metric broke before the results did. When a test image has zero true positives, precision and recall both evaluate to 0/0 = NaN, and one NaN silently poisons the mean across the test set. The first run returned a NaN mean F-measure.</p>
+<p>Second — and this came out of fixing the first — I audited the labels rather than the model. Test image 0003 visibly contains fire but carries zero annotations in the source JSON. I verified that programmatically. Both methods correctly score F-measure 0 against it.</p></div>
+</section>
+
+    
+<section class="case__block js-reveal" id="resolution" aria-labelledby="resolution-heading">
+  <p class="case__blocklabel">06</p>
+  <h2 class="case__blockheading" id="resolution-heading">What I changed</h2>
+  <div class="prose"><p>I replaced the precision/recall composition with the direct F-measure formula and added explicit conventions for the degenerate cases: both masks empty → FM = 1; a miss or a false alarm against an empty counterpart → FM = 0.</p>
+<p>One test image had an empty reference mask despite visible fire. Excluding that image would raise the network mean test F-measure by about 4.48 percentage points; the published 0.8507 result retains it. I gave the image its own slide as a data-quality finding rather than quietly dropping it.</p>
+<p>I also deliberately omitted bwareafilt(BW,1) from the classical pipeline, because fire and smoke can form separate disconnected regions and keeping only the largest blob would delete valid detections. A justified omission, documented as one.</p></div>
+</section>
+
+    
+<section class="case__block js-reveal" id="limitations" aria-labelledby="limitations-heading">
+  <p class="case__blocklabel">07</p>
+  <h2 class="case__blockheading" id="limitations-heading">Limitations</h2>
+  <div class="prose"><ul class="bullets bullets--limits"><li>Small dataset: 141 training images and only 20 test images. Single-image effects move the mean noticeably — which is exactly what the 4.48 pp finding demonstrates.</li>
+<li>The 40-image validation split was never used. The course protocol was train/test only, so there are no validation curves and no in-training overfitting detection.</li>
+<li>Offline only. No deployment, no real-time inference, no video, no production validation.</li>
+<li>F-measure is the only metric quoted here. The precision/recall column naming is inconsistent between two source documents, so those values are deliberately withheld until the mapping is read straight out of the evaluation code.</li>
+<li>The classical train/test comparison is not like-for-like: the training boxplot uses per-image oracle parameters, the test result uses a single consolidated set.</li>
+<li>The fire-versus-smoke sub-classification step is an unvalidated heuristic.</li></ul></div>
+</section>
+  </div>
+
+  <section class="case__gallery js-reveal" id="evidence" aria-labelledby="evidence-heading">
+    <div class="shell">
+      <p class="case__blocklabel">08</p>
+      <h2 class="case__blockheading" id="evidence-heading">Evidence</h2>
+      <div class="gallery">
+        <figure class="figure">
+          <button class="figure__zoom" type="button" data-caption="Per-image F-measure dispersion across all four conditions. The network's test box sits tight and high; the classical boxes are wide and low. Reporting spread rather than a single mean was a deliberate choice." aria-label="Enlarge figure: Boxplot comparing per-image F-measure distributions for the network and the classical baseline on training and test sets.">
+            <img
+        class=""
+        src="assets/images/segmentation__fm_boxplot_network_vs_classical-1400.webp"
+        srcset="assets/images/segmentation__fm_boxplot_network_vs_classical-640.webp 640w, assets/images/segmentation__fm_boxplot_network_vs_classical-960.webp 960w, assets/images/segmentation__fm_boxplot_network_vs_classical-1400.webp 1400w"
+        sizes="(max-width: 800px) 100vw, 46vw"
+        width="1400"
+        height="843"
+        loading="lazy"
+        decoding="async"
+        alt="Boxplot comparing per-image F-measure distributions for the network and the classical baseline on training and test sets.">
+            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
+          </button>
+          <figcaption>Per-image F-measure dispersion across all four conditions. The network's test box sits tight and high; the classical boxes are wide and low. Reporting spread rather than a single mean was a deliberate choice. <span class="figure__credit">Derived from the Roboflow “Fire and Smoke Segmentation” dataset, <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener">CC BY 4.0</a>.</span></figcaption>
+        </figure>
+<figure class="figure">
+          <button class="figure__zoom" type="button" data-caption="Mean metrics on the 20-image test set, network against classical. Read the F-measure pair only — 0.8507 against 0.4421. The two adjacent bars are labelled inconsistently in the source material and are not quoted anywhere on this site." aria-label="Enlarge figure: Bar chart of mean segmentation metrics on the test set for the network and the classical baseline.">
+            <img
+        class=""
+        src="assets/images/segmentation__mean_metrics_test_set-1400.webp"
+        srcset="assets/images/segmentation__mean_metrics_test_set-640.webp 640w, assets/images/segmentation__mean_metrics_test_set-960.webp 960w, assets/images/segmentation__mean_metrics_test_set-1400.webp 1400w"
+        sizes="(max-width: 800px) 100vw, 46vw"
+        width="1400"
+        height="843"
+        loading="lazy"
+        decoding="async"
+        alt="Bar chart of mean segmentation metrics on the test set for the network and the classical baseline.">
+            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
+          </button>
+          <figcaption>Mean metrics on the 20-image test set, network against classical. Read the F-measure pair only — 0.8507 against 0.4421. The two adjacent bars are labelled inconsistently in the source material and are not quoted anywhere on this site. <span class="figure__credit">Derived from the Roboflow “Fire and Smoke Segmentation” dataset, <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener">CC BY 4.0</a>.</span></figcaption>
+        </figure>
+<figure class="figure">
+          <button class="figure__zoom" type="button" data-caption="MATLAB training progress for the DeepLabv3+/ResNet-18 transfer-learning run — accuracy above, loss below. Training progress from my 30-epoch DeepLabv3+/ResNet-18 transfer-learning run." aria-label="Enlarge figure: MATLAB training progress window showing accuracy rising and loss falling over 30 epochs.">
+            <img
+        class=""
+        src="assets/images/segmentation__training_progress_deeplabv3plus-1400.webp"
+        srcset="assets/images/segmentation__training_progress_deeplabv3plus-640.webp 640w, assets/images/segmentation__training_progress_deeplabv3plus-960.webp 960w, assets/images/segmentation__training_progress_deeplabv3plus-1400.webp 1400w"
+        sizes="(max-width: 800px) 100vw, 46vw"
+        width="1400"
+        height="716"
+        loading="lazy"
+        decoding="async"
+        alt="MATLAB training progress window showing accuracy rising and loss falling over 30 epochs.">
+            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
+          </button>
+          <figcaption>MATLAB training progress for the DeepLabv3+/ResNet-18 transfer-learning run — accuracy above, loss below. Training progress from my 30-epoch DeepLabv3+/ResNet-18 transfer-learning run.</figcaption>
+        </figure>
+<figure class="figure">
+          <button class="figure__zoom" type="button" data-caption="Best network prediction, test image 0007, F-measure 0.964. White = agreement, green = prediction only, magenta = reference only." aria-label="Enlarge figure: Segmentation overlay on a fire image with almost complete agreement between prediction and reference mask.">
+            <img
+        class=""
+        src="assets/images/segmentation__best_network_prediction_fm0p964-1400.webp"
+        srcset="assets/images/segmentation__best_network_prediction_fm0p964-640.webp 640w, assets/images/segmentation__best_network_prediction_fm0p964-960.webp 960w, assets/images/segmentation__best_network_prediction_fm0p964-1400.webp 1400w"
+        sizes="(max-width: 800px) 100vw, 46vw"
+        width="1400"
+        height="843"
+        loading="lazy"
+        decoding="async"
+        alt="Segmentation overlay on a fire image with almost complete agreement between prediction and reference mask.">
+            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
+          </button>
+          <figcaption>Best network prediction, test image 0007, F-measure 0.964. White = agreement, green = prediction only, magenta = reference only. <span class="figure__credit">Derived from the Roboflow “Fire and Smoke Segmentation” dataset, <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener">CC BY 4.0</a>.</span></figcaption>
+        </figure>
+<figure class="figure">
+          <button class="figure__zoom" type="button" data-caption="Test image 0003. The network segments a clear fire region (green), but the reference mask is empty, so it scores F-measure 0. Found by auditing the source JSON. Excluding this image would raise the network test mean by about 4.48 percentage points." aria-label="Enlarge figure: Segmentation overlay showing a predicted fire region in green against an empty reference mask.">
+            <img
+        class=""
+        src="assets/images/segmentation__faulty_ground_truth_image0003-1400.webp"
+        srcset="assets/images/segmentation__faulty_ground_truth_image0003-640.webp 640w, assets/images/segmentation__faulty_ground_truth_image0003-960.webp 960w, assets/images/segmentation__faulty_ground_truth_image0003-1400.webp 1400w"
+        sizes="(max-width: 800px) 100vw, 46vw"
+        width="1400"
+        height="843"
+        loading="lazy"
+        decoding="async"
+        alt="Segmentation overlay showing a predicted fire region in green against an empty reference mask.">
+            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
+          </button>
+          <figcaption>Test image 0003. The network segments a clear fire region (green), but the reference mask is empty, so it scores F-measure 0. Found by auditing the source JSON. Excluding this image would raise the network test mean by about 4.48 percentage points. <span class="figure__credit">Derived from the Roboflow “Fire and Smoke Segmentation” dataset, <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener">CC BY 4.0</a>.</span></figcaption>
+        </figure>
+<figure class="figure">
+          <button class="figure__zoom" type="button" data-caption="The classical baseline's worst test case, F-measure 0.038. The colour rule floods the frame because grey smoke and background are not separable by threshold — the failure mode that explains most of the 0.85-against-0.44 gap." aria-label="Enlarge figure: Classical baseline segmentation flooding most of a smoke image with false-positive pixels.">
+            <img
+        class=""
+        src="assets/images/segmentation__classical_baseline_smoke_failure-1400.webp"
+        srcset="assets/images/segmentation__classical_baseline_smoke_failure-640.webp 640w, assets/images/segmentation__classical_baseline_smoke_failure-960.webp 960w, assets/images/segmentation__classical_baseline_smoke_failure-1400.webp 1400w"
+        sizes="(max-width: 800px) 100vw, 46vw"
+        width="1400"
+        height="843"
+        loading="lazy"
+        decoding="async"
+        alt="Classical baseline segmentation flooding most of a smoke image with false-positive pixels.">
+            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
+          </button>
+          <figcaption>The classical baseline's worst test case, F-measure 0.038. The colour rule floods the frame because grey smoke and background are not separable by threshold — the failure mode that explains most of the 0.85-against-0.44 gap. <span class="figure__credit">Derived from the Roboflow “Fire and Smoke Segmentation” dataset, <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener">CC BY 4.0</a>.</span></figcaption>
+        </figure>
+      </div>
+      <p class="note note--credit">Dataset attribution: Roboflow “Fire and Smoke Segmentation”, licensed <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener">CC BY 4.0</a>. The overlays above are derived visualisations produced by my own evaluation code.</p>
+      <p class="note">Source code, Simulink models and CAD files for this project are not published. They can be walked through on request.</p>
+    </div>
+  </section>
+
+  <nav class="pagenav" aria-label="Other projects">
+    <div class="shell pagenav__inner">
+      <a class="pagenav__link pagenav__link--prev" href="h-bridge-inverter.html"><span class="pagenav__dir">Previous</span><span class="pagenav__title">3 kVA Single-Phase H-Bridge Inverter</span></a>
+      <a class="pagenav__link pagenav__link--next" href="robolatte-ur5e.html"><span class="pagenav__dir">Next</span><span class="pagenav__title">RoboLatte — UR5e Dynamic Simulation</span></a>
+    </div>
+  </nav>
+
+  <section class="section section--contact">
+    <div class="shell shell--narrow">
+      <h2 class="section__title">Get in touch</h2>
+      <p class="contact__lede">Six months preferred; 6–12 months workable. Based in Rome, willing to relocate throughout Europe — Germany, the Netherlands and Denmark included.</p>
+      <div class="contact__actions">
+        <a class="btn btn--primary btn--lg" href="mailto:mashalakh.mamedov1@gmail.com">mashalakh.mamedov1@gmail.com</a>
+        <a class="btn btn--lg" href="https://www.linkedin.com/in/mashalakh/" rel="me noopener">LinkedIn</a>
+        <a class="btn btn--lg" href="assets/files/Mashalakh_Mamedov_CV.pdf" download>Download CV (PDF)</a>
+      </div>
+    </div>
+  </section>
+</article>
+
+</main>
+
+<footer class="footer">
+  <div class="shell footer__inner">
+    <div class="footer__col">
+      <p class="footer__name">Mashalakh Mamedov</p>
+      <p class="footer__meta">Rome, Italy · Available for 6–12 month internships from October 2026 · Open to relocation across Europe</p>
+    </div>
+    <div class="footer__col footer__links">
+      <a href="mailto:mashalakh.mamedov1@gmail.com">mashalakh.mamedov1@gmail.com</a>
+      <a href="tel:+393447816935">+39 344 781 6935</a>
+      <a href="https://www.linkedin.com/in/mashalakh/" rel="me noopener">linkedin.com/in/mashalakh</a>
+      <a href="assets/files/Mashalakh_Mamedov_CV.pdf" download>CV (PDF)</a>
+    </div>
+    <p class="footer__legal">
+      All figures on this site are my own or my project team's output. Segmentation overlays are derived from the
+      Roboflow “Fire and Smoke Segmentation” dataset, used under
+      <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener">CC BY 4.0</a>.
+      Source code, models and CAD files are not published. Last updated 2026-08-07.
+    </p>
+  </div>
+</footer>
+
+<dialog class="lightbox" id="lightbox" aria-label="Enlarged figure">
+  <button class="lightbox__close" type="button" aria-label="Close figure">&times;</button>
+  <div class="lightbox__stage"></div>
+  <p class="lightbox__caption"></p>
+</dialog>
+
+<script src="scripts/site.js" defer></script>
+</body>
+</html>

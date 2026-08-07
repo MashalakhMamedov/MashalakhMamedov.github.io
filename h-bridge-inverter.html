@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3 kVA Single-Phase H-Bridge Inverter — Mashalakh Mamedov</title>
+<meta name="description" content="Designed for a 400 V DC input and a 230 V RMS, 50 Hz output target; the simulation produced ≈ 229.4 V RMS at unity PF and 213.5 V RMS at 0.5 lagging PF. 1.64 % output THD against a 3 % requirement — then an LC resonance under inductive load, diagnosed and damped, with the cost of the fix reported.">
+<meta name="author" content="Mashalakh Mamedov">
+<meta name="theme-color" content="#0d1117">
+<link rel="canonical" href="https://mashalakhmamedov.github.io/h-bridge-inverter.html">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Mashalakh Mamedov">
+<meta property="og:title" content="3 kVA Single-Phase H-Bridge Inverter — Mashalakh Mamedov">
+<meta property="og:description" content="Designed for a 400 V DC input and a 230 V RMS, 50 Hz output target; the simulation produced ≈ 229.4 V RMS at unity PF and 213.5 V RMS at 0.5 lagging PF. 1.64 % output THD against a 3 % requirement — then an LC resonance under inductive load, diagnosed and damped, with the cost of the fix reported.">
+<meta property="og:url" content="https://mashalakhmamedov.github.io/h-bridge-inverter.html">
+<meta property="og:locale" content="en_GB">
+<meta property="og:image" content="https://mashalakhmamedov.github.io/assets/images/inverter__casea_fft_thd_1p64pct-1400.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="3 kVA Single-Phase H-Bridge Inverter — Mashalakh Mamedov">
+<meta name="twitter:description" content="Designed for a 400 V DC input and a 230 V RMS, 50 Hz output target; the simulation produced ≈ 229.4 V RMS at unity PF and 213.5 V RMS at 0.5 lagging PF. 1.64 % output THD against a 3 % requirement — then an LC resonance under inductive load, diagnosed and damped, with the cost of the fix reported.">
+<meta name="twitter:image" content="https://mashalakhmamedov.github.io/assets/images/inverter__casea_fft_thd_1p64pct-1400.webp">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="styles/site.css">
+</head>
+<body class="is-case">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="masthead">
+  <div class="shell masthead__inner">
+    <a class="masthead__id" href="index.html">
+      <span class="masthead__name">Mashalakh Mamedov</span>
+      <span class="masthead__role">Mechatronics MSc Candidate</span>
+    </a>
+    <button class="masthead__toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+      <span class="masthead__toggle-bars" aria-hidden="true"></span>
+      <span class="u-visually-hidden">Menu</span>
+    </button>
+    <nav class="masthead__nav" id="primary-nav" aria-label="Primary">
+      <a href="index.html#projects">Projects</a>
+      <a href="index.html#experience">Experience</a>
+      <a href="index.html#skills">Skills</a>
+      <a href="index.html#contact">Contact</a>
+      <a class="masthead__cv" href="assets/files/Mashalakh_Mamedov_CV.pdf" download>CV</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<article class="case">
+  <header class="case__head">
+    <div class="shell shell--narrow">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="index.html">Projects</a><span aria-hidden="true"> / </span><span>Power electronics</span>
+      </nav>
+      <p class="kicker">Power electronics</p>
+      <h1 class="case__title">3 kVA Single-Phase H-Bridge Inverter</h1>
+      <p class="case__subtitle">Unipolar SPWM design and THD validation in MATLAB/Simulink</p>
+      <dl class="case__context">
+        <div><dt>Course</dt><dd>MSc Power Electronics and Electrical Drives</dd></div>
+        <div><dt>Institution</dt><dd>University of Rome Tor Vergata</dd></div>
+        <div><dt>Date</dt><dd>A.Y. 2025/26</dd></div>
+        <div><dt>Team</dt><dd>Individual project</dd></div>
+        <div><dt>Nature</dt><dd>Simulation only</dd></div>
+      </dl>
+    </div>
+  </header>
+
+  <figure class="case__hero">
+    <div class="shell">
+      <img
+        class="case__heroimg"
+        src="assets/images/inverter__casea_fft_thd_1p64pct-1400.webp"
+        srcset="assets/images/inverter__casea_fft_thd_1p64pct-640.webp 640w, assets/images/inverter__casea_fft_thd_1p64pct-960.webp 960w, assets/images/inverter__casea_fft_thd_1p64pct-1400.webp 1400w"
+        sizes="(max-width: 1100px) 100vw, 1100px"
+        width="1400"
+        height="911"
+        loading="eager"
+        decoding="async"
+        alt="FFT spectrum of inverter output voltage showing a dominant 50 Hz fundamental and small carrier sidebands, with total harmonic distortion of 1.64 percent.">
+    </div>
+  </figure>
+
+  <div class="shell">
+    <dl class="metrics metrics--case">
+      <div class="metric"><dt class="metric__value">1.64 %</dt><dd class="metric__label">output voltage THD at full load, unity PF</dd></div>
+<div class="metric"><dt class="metric__value">3.64 % → 2.33 %</dt><dd class="metric__label">inductive-load THD, before and after damping</dd></div>
+<div class="metric"><dt class="metric__value">3 kVA</dt><dd class="metric__label">rating, 400 V DC in, 230 V RMS / 50 Hz out</dd></div>
+    </dl>
+  </div>
+
+  <div class="shell shell--narrow case__body">
+    
+<section class="case__block js-reveal" id="problem" aria-labelledby="problem-heading">
+  <p class="case__blocklabel">01</p>
+  <h2 class="case__blockheading" id="problem-heading">Problem</h2>
+  <div class="prose"><p>Take a 3 kVA single-phase DC–AC inverter from a written specification to a validated simulation: 400 V DC bus in, 230 V RMS at 50 Hz out, unipolar SPWM, open-loop voltage control, total harmonic distortion below 3 % at full load.</p>
+<p>The specification is the easy half. The requirement that actually bites is that THD has to hold across load power factors, not just at the resistive design point.</p></div>
+</section>
+
+    
+<section class="case__block js-reveal" id="ownership" aria-labelledby="ownership-heading">
+  <p class="case__blocklabel">02</p>
+  <h2 class="case__blockheading" id="ownership-heading">What I owned</h2>
+  <div class="prose"><p>Everything. This is the one project in my portfolio with a single author on the cover: specification, analytical design, Simulink model build, all five simulation cases, the FFT/THD measurements, semiconductor selection and loss analysis, the report and the defence deck.</p><p class="attribution attribution--solo"><span class="attribution__label">Sole author</span>No teammate work is included in this case study.</p></div>
+</section>
+
+    
+<section class="case__block js-reveal" id="method" aria-labelledby="method-heading">
+  <p class="case__blocklabel">03</p>
+  <h2 class="case__blockheading" id="method-heading">Method</h2>
+  <div class="prose"><ol class="steps"><li>Derived the modulation index from m·Ea = √2 · 230, giving m ≈ 0.8132 on the 400 V bus, and chose a 5 kHz carrier (k = f_p/f_m = 100).</li>
+<li>Sized a second-order LC output filter — L = 5 mH, C = 20 µF — placing the corner at ≈ 503 Hz, a decade below the carrier and a decade above the fundamental.</li>
+<li>Computed R, L and C load values for the rated 3 kVA point at three power factors: 17.633 Ω at unity; 8.82 Ω + 48.6 mH at 0.5 lagging; 8.82 Ω + 208 µF at 0.5 leading.</li>
+<li>Built the Simulink model driven entirely from one parameter script (<code>project_params.m</code>), with <code>powergui</code> in Continuous mode and a variable-step <code>ode23tb</code> solver capped at 2 µs — 1/100 of the carrier period.</li>
+<li>Ran a five-case validation matrix: unity PF steady state, 0.5 PF inductive, 0.5 PF capacitive, no-load step transient, full-load step transient. Each case is its own .slx so results stay reproducible.</li>
+<li>Read THD from the <code>powergui</code> FFT Analyzer over five clean fundamental periods, with the analysis window opened after the LC start-up transient had decayed.</li>
+<li>Selected a 650 V / 40 A IGBT class and hand-calculated first-order conduction and switching losses. The resulting efficiency and junction-temperature figures are analytical estimates, not electro-thermal simulation and not measurements.</li></ol></div>
+</section>
+
+    
+<section class="case__block js-reveal" id="result" aria-labelledby="result-heading">
+  <p class="case__blocklabel">04</p>
+  <h2 class="case__blockheading" id="result-heading">Result</h2>
+  <div class="prose"><p>At unity power factor the filtered output reached 1.64 % THD against the below-3 % requirement, with a 324.4 V peak fundamental and residual energy sitting at the 5 kHz carrier and its sidebands.</p>
+<p>The 0.5 leading capacitive case came in at 1.22 %. The 0.5 lagging inductive case is where the design failed, and that failure is the interesting part of the project.</p></div>
+</section>
+
+    
+<section class="case__block js-reveal" id="diagnosis" aria-labelledby="diagnosis-heading">
+  <p class="case__blocklabel">05</p>
+  <h2 class="case__blockheading" id="diagnosis-heading">What went wrong, and what the symptom meant</h2>
+  <div class="prose"><p>Under the 0.5 lagging inductive load, THD rose to 3.64 % — outside specification. The tempting explanations were a modulator error or a solver artefact.</p>
+<p>It was neither. The load current stayed smooth while the output voltage rang. That asymmetry is the signature of a filter-side resonance, not a load-side one: the resistive load had been quietly damping the LC filter's own ≈ 503 Hz resonance, and the inductive load took that damping away. I confirmed the capacitor and load parameters were correct before accepting the diagnosis.</p></div>
+</section>
+
+    
+<section class="case__block js-reveal" id="resolution" aria-labelledby="resolution-heading">
+  <p class="case__blocklabel">06</p>
+  <h2 class="case__blockheading" id="resolution-heading">What I changed</h2>
+  <div class="prose"><p>I changed the filter capacitor branch from a pure C to an RC branch with an explicit 5 Ω series damping resistor, which left the already-sized L and C untouched. Inductive-load THD fell from 3.64 % to 2.33 %, back inside specification.</p>
+<p>The same resistor raised unity-PF THD from 0.72 % to 1.64 %. That is a real trade-off and it is in the report, not hidden. A separate solver problem in the no-load case — an open output creates a floating node in Specialized Power Systems — was handled by modelling no-load as a 1 MΩ resistor, roughly 0.23 mA at rated voltage.</p></div>
+</section>
+
+    
+<section class="case__block js-reveal" id="limitations" aria-labelledby="limitations-heading">
+  <p class="case__blocklabel">07</p>
+  <h2 class="case__blockheading" id="limitations-heading">Limitations</h2>
+  <div class="prose"><ul class="bullets bullets--limits"><li>Simulation only. No prototype, no PCB, no laboratory measurement. Nothing here was built or measured on hardware.</li>
+<li>The ≈ 98.3 % efficiency and ≈ 78 °C junction temperature are first-order analytical estimates from a hand calculation — not simulated electro-thermal results and not measurements.</li>
+<li>Open-loop control only. Output RMS varies with load power factor (213.5 V inductive against ≈ 229.4 V unity) because a fixed modulation index cannot compensate the filter-inductor drop. A practical unit would need closed-loop voltage regulation.</li>
+<li>Ideal-ish device models: no dead-time, no detailed gate-drive or EMI modelling.</li>
+<li>FFT/THD was measured for the three steady-state cases only. The two step-transient cases are time-domain.</li></ul></div>
+</section>
+  </div>
+
+  <section class="case__gallery js-reveal" id="evidence" aria-labelledby="evidence-heading">
+    <div class="shell">
+      <p class="case__blocklabel">08</p>
+      <h2 class="case__blockheading" id="evidence-heading">Evidence</h2>
+      <div class="gallery">
+        <figure class="figure">
+          <button class="figure__zoom" type="button" data-caption="FFT of the filtered output voltage at full load, unity power factor. Fundamental 324.4 V peak at 50 Hz with 1.64 % THD against a below-3 % requirement. Residual energy sits at the 5 kHz carrier and its sidebands." aria-label="Enlarge figure: FFT spectrum of inverter output voltage showing a dominant 50 Hz fundamental and small carrier sidebands, with total harmonic distortion of 1.64 percent.">
+            <img
+        class=""
+        src="assets/images/inverter__casea_fft_thd_1p64pct-1400.webp"
+        srcset="assets/images/inverter__casea_fft_thd_1p64pct-640.webp 640w, assets/images/inverter__casea_fft_thd_1p64pct-960.webp 960w, assets/images/inverter__casea_fft_thd_1p64pct-1400.webp 1400w"
+        sizes="(max-width: 800px) 100vw, 46vw"
+        width="1400"
+        height="911"
+        loading="lazy"
+        decoding="async"
+        alt="FFT spectrum of inverter output voltage showing a dominant 50 Hz fundamental and small carrier sidebands, with total harmonic distortion of 1.64 percent.">
+            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
+          </button>
+          <figcaption>FFT of the filtered output voltage at full load, unity power factor. Fundamental 324.4 V peak at 50 Hz with 1.64 % THD against a below-3 % requirement. Residual energy sits at the 5 kHz carrier and its sidebands.</figcaption>
+        </figure>
+<figure class="figure">
+          <button class="figure__zoom" type="button" data-caption="The same measurement under a 0.5 lagging inductive load after adding the 5 Ω damping resistor: fundamental 301.9 V peak, THD 2.33 %, down from 3.64 % before damping." aria-label="Enlarge figure: FFT spectrum under inductive load after damping, showing 2.33 percent total harmonic distortion.">
+            <img
+        class=""
+        src="assets/images/inverter__caseb_fft_thd_2p33pct_after_damping-1400.webp"
+        srcset="assets/images/inverter__caseb_fft_thd_2p33pct_after_damping-640.webp 640w, assets/images/inverter__caseb_fft_thd_2p33pct_after_damping-960.webp 960w, assets/images/inverter__caseb_fft_thd_2p33pct_after_damping-1400.webp 1400w"
+        sizes="(max-width: 800px) 100vw, 46vw"
+        width="1400"
+        height="911"
+        loading="lazy"
+        decoding="async"
+        alt="FFT spectrum under inductive load after damping, showing 2.33 percent total harmonic distortion.">
+            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
+          </button>
+          <figcaption>The same measurement under a 0.5 lagging inductive load after adding the 5 Ω damping resistor: fundamental 301.9 V peak, THD 2.33 %, down from 3.64 % before damping.</figcaption>
+        </figure>
+<figure class="figure">
+          <button class="figure__zoom" type="button" data-caption="Load voltage (scaled ÷20) and load current at unity power factor — the two waveforms are in phase, confirming the 3 kVA resistive operating point." aria-label="Enlarge figure: Two sinusoidal waveforms in phase, load voltage scaled down and load current.">
+            <img
+        class=""
+        src="assets/images/inverter__casea_voltage_current_in_phase-1394.webp"
+        srcset="assets/images/inverter__casea_voltage_current_in_phase-640.webp 640w, assets/images/inverter__casea_voltage_current_in_phase-960.webp 960w, assets/images/inverter__casea_voltage_current_in_phase-1394.webp 1394w"
+        sizes="(max-width: 800px) 100vw, 46vw"
+        width="1394"
+        height="912"
+        loading="lazy"
+        decoding="async"
+        alt="Two sinusoidal waveforms in phase, load voltage scaled down and load current.">
+            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
+          </button>
+          <figcaption>Load voltage (scaled ÷20) and load current at unity power factor — the two waveforms are in phase, confirming the 3 kVA resistive operating point.</figcaption>
+        </figure>
+<figure class="figure">
+          <button class="figure__zoom" type="button" data-caption="0.5 leading capacitive load: current leads voltage by 60°, the mirror image of the inductive case, completing the power-factor validation sweep." aria-label="Enlarge figure: Sinusoidal current waveform leading the voltage waveform by sixty degrees.">
+            <img
+        class=""
+        src="assets/images/inverter__casec_current_leading_voltage-1394.webp"
+        srcset="assets/images/inverter__casec_current_leading_voltage-640.webp 640w, assets/images/inverter__casec_current_leading_voltage-960.webp 960w, assets/images/inverter__casec_current_leading_voltage-1394.webp 1394w"
+        sizes="(max-width: 800px) 100vw, 46vw"
+        width="1394"
+        height="912"
+        loading="lazy"
+        decoding="async"
+        alt="Sinusoidal current waveform leading the voltage waveform by sixty degrees.">
+            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
+          </button>
+          <figcaption>0.5 leading capacitive load: current leads voltage by 60°, the mirror image of the inductive case, completing the power-factor validation sweep.</figcaption>
+        </figure>
+<figure class="figure">
+          <button class="figure__zoom" type="button" data-caption="Modulation-amplitude step from zero to nominal at t = 20 ms with no load. The LC filter has almost no external damping, so ripple and slight overshoot are visible around the peaks." aria-label="Enlarge figure: Output voltage step response with no load, showing ripple and overshoot at the waveform peaks.">
+            <img
+        class=""
+        src="assets/images/inverter__cased_step_transient_no_load-1400.webp"
+        srcset="assets/images/inverter__cased_step_transient_no_load-640.webp 640w, assets/images/inverter__cased_step_transient_no_load-960.webp 960w, assets/images/inverter__cased_step_transient_no_load-1400.webp 1400w"
+        sizes="(max-width: 800px) 100vw, 46vw"
+        width="1400"
+        height="1104"
+        loading="lazy"
+        decoding="async"
+        alt="Output voltage step response with no load, showing ripple and overshoot at the waveform peaks.">
+            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
+          </button>
+          <figcaption>Modulation-amplitude step from zero to nominal at t = 20 ms with no load. The LC filter has almost no external damping, so ripple and slight overshoot are visible around the peaks.</figcaption>
+        </figure>
+<figure class="figure">
+          <button class="figure__zoom" type="button" data-caption="The same step at full resistive load. The load damps the filter heavily and the output settles smoothly — the side-by-side comparison with the no-load case is the point of the test." aria-label="Enlarge figure: Output voltage step response at full load, settling smoothly without visible ringing.">
+            <img
+        class=""
+        src="assets/images/inverter__casee_step_transient_full_load-1400.webp"
+        srcset="assets/images/inverter__casee_step_transient_full_load-640.webp 640w, assets/images/inverter__casee_step_transient_full_load-960.webp 960w, assets/images/inverter__casee_step_transient_full_load-1400.webp 1400w"
+        sizes="(max-width: 800px) 100vw, 46vw"
+        width="1400"
+        height="1105"
+        loading="lazy"
+        decoding="async"
+        alt="Output voltage step response at full load, settling smoothly without visible ringing.">
+            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
+          </button>
+          <figcaption>The same step at full resistive load. The load damps the filter heavily and the output settles smoothly — the side-by-side comparison with the no-load case is the point of the test.</figcaption>
+        </figure>
+      </div>
+      
+      <p class="note">Source code, Simulink models and CAD files for this project are not published. They can be walked through on request.</p>
+    </div>
+  </section>
+
+  <nav class="pagenav" aria-label="Other projects">
+    <div class="shell pagenav__inner">
+      <span class="pagenav__empty"></span>
+      <a class="pagenav__link pagenav__link--next" href="fire-smoke-segmentation.html"><span class="pagenav__dir">Next</span><span class="pagenav__title">Fire and Smoke Semantic Segmentation</span></a>
+    </div>
+  </nav>
+
+  <section class="section section--contact">
+    <div class="shell shell--narrow">
+      <h2 class="section__title">Get in touch</h2>
+      <p class="contact__lede">Six months preferred; 6–12 months workable. Based in Rome, willing to relocate throughout Europe — Germany, the Netherlands and Denmark included.</p>
+      <div class="contact__actions">
+        <a class="btn btn--primary btn--lg" href="mailto:mashalakh.mamedov1@gmail.com">mashalakh.mamedov1@gmail.com</a>
+        <a class="btn btn--lg" href="https://www.linkedin.com/in/mashalakh/" rel="me noopener">LinkedIn</a>
+        <a class="btn btn--lg" href="assets/files/Mashalakh_Mamedov_CV.pdf" download>Download CV (PDF)</a>
+      </div>
+    </div>
+  </section>
+</article>
+
+</main>
+
+<footer class="footer">
+  <div class="shell footer__inner">
+    <div class="footer__col">
+      <p class="footer__name">Mashalakh Mamedov</p>
+      <p class="footer__meta">Rome, Italy · Available for 6–12 month internships from October 2026 · Open to relocation across Europe</p>
+    </div>
+    <div class="footer__col footer__links">
+      <a href="mailto:mashalakh.mamedov1@gmail.com">mashalakh.mamedov1@gmail.com</a>
+      <a href="tel:+393447816935">+39 344 781 6935</a>
+      <a href="https://www.linkedin.com/in/mashalakh/" rel="me noopener">linkedin.com/in/mashalakh</a>
+      <a href="assets/files/Mashalakh_Mamedov_CV.pdf" download>CV (PDF)</a>
+    </div>
+    <p class="footer__legal">
+      All figures on this site are my own or my project team's output. Segmentation overlays are derived from the
+      Roboflow “Fire and Smoke Segmentation” dataset, used under
+      <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener">CC BY 4.0</a>.
+      Source code, models and CAD files are not published. Last updated 2026-08-07.
+    </p>
+  </div>
+</footer>
+
+<dialog class="lightbox" id="lightbox" aria-label="Enlarged figure">
+  <button class="lightbox__close" type="button" aria-label="Close figure">&times;</button>
+  <div class="lightbox__stage"></div>
+  <p class="lightbox__caption"></p>
+</dialog>
+
+<script src="scripts/site.js" defer></script>
+</body>
+</html>
