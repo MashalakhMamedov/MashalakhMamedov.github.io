@@ -8,6 +8,54 @@
   // Mark JS as available only where it changes initial paint (reveal animation).
   if (!reduceMotion) document.body.classList.add('js');
 
+  /* --- Theme -------------------------------------------------------------
+     The attribute is already correct: an inline script in <head> set it
+     before first paint. This only handles the toggle and, for a visitor who
+     has never chosen, keeps following the operating system. */
+  var root = document.documentElement;
+  var themeBtn = document.getElementById('theme-toggle');
+  var osLight = window.matchMedia('(prefers-color-scheme: light)');
+
+  function stored() {
+    try {
+      var v = localStorage.getItem('theme');
+      return v === 'light' || v === 'dark' ? v : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function apply(theme) {
+    root.setAttribute('data-theme', theme);
+    if (themeBtn) {
+      themeBtn.setAttribute(
+        'aria-label',
+        theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'
+      );
+      themeBtn.setAttribute('title', themeBtn.getAttribute('aria-label'));
+    }
+  }
+
+  apply(root.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
+
+  if (themeBtn) {
+    themeBtn.addEventListener('click', function () {
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      apply(next);
+      try {
+        localStorage.setItem('theme', next);
+      } catch (e) {
+        /* private mode — the choice just will not survive the session */
+      }
+    });
+  }
+
+  if (typeof osLight.addEventListener === 'function') {
+    osLight.addEventListener('change', function (e) {
+      if (!stored()) apply(e.matches ? 'light' : 'dark');
+    });
+  }
+
   /* --- Mobile navigation ------------------------------------------------- */
   var toggle = document.querySelector('.masthead__toggle');
   var nav = document.getElementById('primary-nav');
