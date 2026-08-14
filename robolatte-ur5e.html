@@ -7,6 +7,7 @@
 <title>UR5e Dynamic Simulation — Inventor CAD Dynamics vs MATLAB · Mashalakh Mamedov</title>
 <meta name="description" content="Case study: a UR5e beverage task modelled in Autodesk Inventor Dynamic Simulation and checked against an analytical MATLAB inverse-dynamics model of the same motion, with the joint-torque discrepancies reported rather than smoothed over.">
 <meta name="author" content="Mashalakh Mamedov">
+<meta name="google-site-verification" content="W-Y71ul96LOj-eBEKb1GOZ6LM0tuA-P7PGZmfWH5ZF4">
 <meta name="color-scheme" content="dark light">
 <meta name="theme-color" content="#0e141b" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)">
@@ -155,7 +156,7 @@
     </div>
     <div class="summary__row">
       <dt>My contribution</dt>
-      <dd>Two-person project. I owned the Autodesk Inventor workstream: the UR5e assembly, imposed cubic motions on all six joints, the Dynamic Simulation setup and the driving-force extraction. My teammate built the MATLAB kinematics, trajectory generation and analytical inverse dynamics.</dd>
+      <dd>Two-person project. I was primarily responsible for the Autodesk Inventor workstream: the UR5e assembly, imposed cubic motions on all six joints, the Dynamic Simulation setup and the driving-force extraction. I also contributed to the shared MATLAB work, while my teammate led most of the MATLAB kinematics, trajectory generation and inverse dynamics.</dd>
     </div>
     <div class="summary__row summary__row--result">
       <dt>Main result</dt>
@@ -175,7 +176,7 @@
         <div><dt>Course</dt><dd>MSc Robot Mechanics</dd></div>
         <div><dt>Institution</dt><dd>University of Rome Tor Vergata</dd></div>
         <div><dt>Date</dt><dd>January 2026</dd></div>
-        <div><dt>Team</dt><dd>Two-person project — I owned the Autodesk Inventor workstream</dd></div>
+        <div><dt>Team</dt><dd>Two-person project. I was primarily responsible for the Autodesk Inventor workstream</dd></div>
         <div><dt>Nature</dt><dd>Simulation and CAD only</dd></div>
       </dl>
     </div>
@@ -220,7 +221,7 @@
 <section class="case__block js-reveal" id="ownership" aria-labelledby="ownership-heading">
   <p class="case__blocklabel">02</p>
   <h2 class="case__blockheading" id="ownership-heading">What I contributed</h2>
-  <div class="prose"><p class="credit credit--mine"><span class="credit__label">My responsibility</span>I owned the Autodesk Inventor workstream. I built and constrained the UR5e assembly, defined imposed cubic ramp motions on all six revolute joints to match the planned trajectory, configured the Dynamic Simulation environment — gravity as an explicit vector (g_z = −9810 mm/s²), CAD-derived link mass and inertia properties, a 3 N end-effector payload for the cup and latte — and extracted the joint driving forces from the <code>Output Grapher</code> at t = 1 s, 4 s and 6 s, converting them from N·mm to N·m. The Inventor column of every torque comparison in the report is my output.</p><p class="credit credit--theirs"><span class="credit__label">Teammate's responsibility</span>My teammate built the parallel MATLAB model: the <code>rigidBodyTree</code>, forward and inverse kinematics, trajectory generation and analytical inverse dynamics. We prepared and presented together and were examined on both halves, so I can explain that work — but it is not my implementation.</p><p class="credit credit--team"><span class="credit__label">Result belonging to the whole team</span>The workspace layout, the cross-tool torque comparison and the report are the joint result of both workstreams. We prepared and presented together.</p></div>
+  <div class="prose"><p class="credit credit--mine"><span class="credit__label">My responsibility</span>I was primarily responsible for the Autodesk Inventor workstream. I built and constrained the UR5e assembly, defined imposed cubic ramp motions on all six revolute joints to match the planned trajectory, configured the Dynamic Simulation environment — gravity as an explicit vector (g_z = −9810 mm/s²), CAD-derived link mass and inertia properties, a 3 N end-effector payload for the cup and latte — and extracted the joint driving forces from the <code>Output Grapher</code> at t = 1 s, 4 s and 6 s, converting them from N·mm to N·m. The Inventor column of every torque comparison in the report is my output. I also contributed to the shared MATLAB analysis.</p><p class="credit credit--theirs"><span class="credit__label">Teammate's responsibility</span>My teammate led most of the MATLAB work: the <code>rigidBodyTree</code>, forward and inverse kinematics, trajectory generation and analytical inverse dynamics. I contributed to that shared analysis rather than implementing it. We prepared and presented together and were examined on both halves.</p><p class="credit credit--team"><span class="credit__label">Result belonging to the whole team</span>The workspace layout, the cross-tool torque comparison and the report are the joint result of both workstreams. We prepared and presented together.</p></div>
 </section>
 
     
