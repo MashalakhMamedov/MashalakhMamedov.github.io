@@ -7,6 +7,7 @@
 <title>Fire and Smoke Segmentation — DeepLabv3+ vs Colour Baseline · Mashalakh Mamedov</title>
 <meta name="description" content="Case study: DeepLabv3+ transfer learning benchmarked against a classical colour baseline for fire and smoke segmentation in MATLAB. 0.8507 mean test F-measure against 0.4421, plus a faulty reference mask found by auditing the labels.">
 <meta name="author" content="Mashalakh Mamedov">
+<meta name="google-site-verification" content="W-Y71ul96LOj-eBEKb1GOZ6LM0tuA-P7PGZmfWH5ZF4">
 <meta name="color-scheme" content="dark light">
 <meta name="theme-color" content="#0e141b" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)">
@@ -270,7 +271,8 @@
 <li>Offline only. No deployment, no real-time inference, no video, no production validation.</li>
 <li>F-measure is the only metric quoted here. The precision/recall column naming is inconsistent between two source documents, so those values are deliberately withheld until the mapping is read straight out of the evaluation code.</li>
 <li>The classical train/test comparison is not like-for-like: the training boxplot uses per-image oracle parameters, the test result uses a single consolidated set.</li>
-<li>The fire-versus-smoke sub-classification step is an unvalidated heuristic.</li></ul></div>
+<li>The fire-versus-smoke sub-classification step is an unvalidated heuristic.</li>
+<li>The archived package is a results archive, not a runnable project. The MATLAB scripts are included, but the 201 source images, the processed dataset, the trained network and the result MAT files are not, so the reported metrics cannot be re-executed from this archive as delivered.</li></ul></div>
 </section>
   </div>
 

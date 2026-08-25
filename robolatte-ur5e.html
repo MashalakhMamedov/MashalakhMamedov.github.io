@@ -256,7 +256,7 @@
   <p class="case__blocklabel">06</p>
   <h2 class="case__blockheading" id="resolution-heading">How I made the models comparable</h2>
   <div class="prose"><p>I derived an offset-based joint mapping so a given robot configuration means the same thing in both tools, and drove the CAD model with imposed cubic motions rather than animating it by hand, so the Inventor simulation follows the same trajectory profile the analytical model planned. I unit-converted the extracted driving forces from N·mm to N·m so the two toolchains produced directly comparable quantities.</p>
-<p>Rather than reporting an aggregate mismatch, the report isolates Joint 3 — which carries all distal link weight plus the payload and is therefore the joint most exposed to the approximate inertias MATLAB was forced to use — and explains it. The report also sets the right expectation up front: exact numerical agreement is not expected between analytical inverse dynamics and a damped forward CAD simulation, so trend and relative magnitude are what get evaluated.</p></div>
+<p>Rather than reporting an aggregate mismatch, the report isolates Joint 3, which carries all distal link weight plus the payload, and explains what is and is not known about the discrepancy. Approximate link inertias, differing gravity and payload handling between the toolchains, and sampling only three instants are all candidate explanations. None was isolated by a sensitivity study. The report also sets the right expectation up front: exact numerical agreement is not expected between analytical inverse dynamics and a damped forward CAD simulation, so trend and relative magnitude are what get evaluated.</p></div>
 </section>
 
     
@@ -342,7 +342,7 @@
           <figcaption>Inventor Output Grapher — joint driving-force curves over the first second of motion. These are the raw N·mm values I extracted and converted to N·m for the cross-tool comparison.</figcaption>
         </figure>
 <figure class="figure">
-          <button class="figure__zoom framed" type="button" data-caption="Joint torques at t = 4 s, in N·m: my Inventor Dynamic Simulation results against my teammate's MATLAB analytical inverse dynamics. Five joints agree in sign and order of magnitude; Joint 3 does not, because MATLAB used approximate link inertias while Inventor used full CAD geometry. (The source image omits the unit and time labels.)" aria-label="Enlarge figure: Table comparing MATLAB and Inventor joint torque values for six joints.">
+          <button class="figure__zoom framed" type="button" data-caption="Joint torques at t = 4 s, in N·m: my Inventor Dynamic Simulation results against my teammate's MATLAB analytical inverse dynamics. Five joints agree in sign and order of magnitude; Joint 3 does not. MATLAB used approximate link inertias where Inventor used full CAD geometry, which is one plausible contributor, but no sensitivity study was run. (The source image omits the unit and time labels.)" aria-label="Enlarge figure: Table comparing MATLAB and Inventor joint torque values for six joints.">
             <img
         class=""
         src="assets/images/robolatte__matlab_vs_inventor_joint_torques-800.webp"
@@ -355,7 +355,7 @@
         alt="Table comparing MATLAB and Inventor joint torque values for six joints.">
             <span class="figure__zoomicon" aria-hidden="true">⤢</span>
           </button>
-          <figcaption>Joint torques at t = 4 s, in N·m: my Inventor Dynamic Simulation results against my teammate's MATLAB analytical inverse dynamics. Five joints agree in sign and order of magnitude; Joint 3 does not, because MATLAB used approximate link inertias while Inventor used full CAD geometry. (The source image omits the unit and time labels.)</figcaption>
+          <figcaption>Joint torques at t = 4 s, in N·m: my Inventor Dynamic Simulation results against my teammate's MATLAB analytical inverse dynamics. Five joints agree in sign and order of magnitude; Joint 3 does not. MATLAB used approximate link inertias where Inventor used full CAD geometry, which is one plausible contributor, but no sensitivity study was run. (The source image omits the unit and time labels.)</figcaption>
         </figure>
 <figure class="figure">
           <button class="figure__zoom framed" type="button" data-caption="My teammate's workstream, shown for project context: MATLAB inverse-kinematics solutions at the four task poses — cup pickup, espresso machine, milk dispenser, serving." aria-label="Enlarge figure: Four MATLAB plots showing the robot arm posed at each of the four task stations.">

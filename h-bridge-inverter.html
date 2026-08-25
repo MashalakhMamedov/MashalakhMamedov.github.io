@@ -7,6 +7,7 @@
 <title>3 kVA H-Bridge Inverter — SPWM Design and THD Validation · Mashalakh Mamedov</title>
 <meta name="description" content="Case study: a 3 kVA single-phase H-bridge inverter designed and validated in MATLAB/Simulink. 1.64 % output THD against a 3 % requirement, an LC resonance under inductive load, and the damping trade-off that brought it back inside specification.">
 <meta name="author" content="Mashalakh Mamedov">
+<meta name="google-site-verification" content="W-Y71ul96LOj-eBEKb1GOZ6LM0tuA-P7PGZmfWH5ZF4">
 <meta name="color-scheme" content="dark light">
 <meta name="theme-color" content="#0e141b" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)">
@@ -233,7 +234,7 @@
 <li>Built the Simulink model driven entirely from one parameter script (<code>project_params.m</code>), with <code>powergui</code> in Continuous mode and a variable-step <code>ode23tb</code> solver capped at 2 µs — 1/100 of the carrier period.</li>
 <li>Ran a five-case validation matrix: unity PF steady state, 0.5 PF inductive, 0.5 PF capacitive, no-load step transient, full-load step transient. Each case is its own .slx so results stay reproducible.</li>
 <li>Read THD from the <code>powergui</code> FFT Analyzer over five clean fundamental periods, with the analysis window opened after the LC start-up transient had decayed.</li>
-<li>Selected a 650 V / 40 A IGBT class and hand-calculated first-order conduction and switching losses. The resulting efficiency and junction-temperature figures are analytical estimates, not electro-thermal simulation and not measurements.</li></ol></div>
+<li>Selected a 650 V / 40 A IGBT class and carried out a first-order conduction and switching-loss calculation as a device-feasibility check. The resulting efficiency and junction-temperature figures are withdrawn and are not published anywhere on this site.</li></ol></div>
 </section>
 
     
@@ -265,7 +266,7 @@
   <p class="case__blocklabel">07</p>
   <h2 class="case__blockheading" id="limitations-heading">Scope and limitations</h2>
   <div class="prose"><ul class="bullets bullets--limits"><li>Simulation only. No prototype, no PCB, no laboratory measurement. Nothing here was built or measured on hardware.</li>
-<li>The ≈ 98.3 % efficiency and ≈ 78 °C junction temperature are first-order analytical estimates from a hand calculation — not simulated electro-thermal results and not measurements.</li>
+<li>No efficiency or thermal figure is published for this project. The report contains a first-order loss and junction-temperature hand calculation, but its switching-energy values are wrong and material loss terms are missing, so the resulting numbers are not reliable even as estimates. The device-feasibility check is described; its numbers are not quoted.</li>
 <li>Open-loop control only. Output RMS varies with load power factor (213.5 V inductive against ≈ 229.4 V unity) because a fixed modulation index cannot compensate the filter-inductor drop. A practical unit would need closed-loop voltage regulation.</li>
 <li>Ideal-ish device models: no dead-time, no detailed gate-drive or EMI modelling.</li>
 <li>FFT/THD was measured for the three steady-state cases only. The two step-transient cases are time-domain.</li></ul></div>
