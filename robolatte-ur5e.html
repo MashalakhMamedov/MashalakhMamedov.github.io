@@ -83,7 +83,7 @@
     </section>
     <section class="blk">
       <div class="callout"><p class="lab">Headline result</p>
-        <p>Five of the six joints agree in sign and order of magnitude between the two tools. <b>Joint 3 is a clear outlier.</b> Reported rather than smoothed over.</p></div>
+        <p>The test was set in advance: do the two tools agree in <b>sign</b> and stay within the same <b>order of magnitude</b>? Five of the six joints clear that bar. <b>Joint 3 does not</b>, and it is the one outright failure. Joint 2 clears it but only just, differing by about 57 %. That makes this a screening comparison, not close agreement, and it is reported as one.</p></div>
     </section>
     <section class="blk">
       <h2>What the project was given</h2>
@@ -117,7 +117,8 @@
     </section>
     <section class="blk">
       <h2>What the result was</h2>
-      <p>At t = 4 s my Inventor result for Joint 2 is <span class="mono">30.4052 N·m</span> against <span class="mono">47.6764 N·m</span> from the analytical model. Across the sampled instants five of the six joints agree in sign and order of magnitude. Joint 2 differs by roughly 57 % and Joint 3 by nearly a factor of two.</p>
+      <p>The comparison was judged on two things agreed before the numbers existed: matching sign, and agreement to within an order of magnitude. Five of the six joints clear both. Joint 3 does not, differing by nearly a factor of two, and it is the outright failure of the test.</p>
+      <p>Joint 2 is the awkward one. At t = 4 s my Inventor result is <span class="mono">30.4052 N·m</span> against <span class="mono">47.6764 N·m</span> from the analytical model. That is about 57 % apart, which technically stays inside an order of magnitude and so passes the stated bar, but it is far too wide to call agreement in any useful sense. I count it as a pass against the criterion and a warning against the conclusion.</p>
       <p>Measured against the ± 50 N·m envelope assumed in the course model, the analytical peak of ≈ 47.7 N·m leaves very little nominal margin. Because the two models disagree materially, that reading is a screening comparison and not evidence of physical feasibility.</p>
     </section>
     <section class="blk">
@@ -130,14 +131,14 @@
     </section>
     <section class="blk">
       <h2>What was not overcome</h2>
-      <p>Joint 3 has no established cause. Approximate link inertias, different gravity and payload handling between the two toolchains, and sampling only three instants are all plausible explanations, and no sensitivity study was run to isolate any of them. Naming one would be a guess, so the disagreement stays open.</p>
+      <p>Neither Joint 3's failure nor Joint 2's width has an established cause. Approximate link inertias, different gravity and payload handling between the two toolchains, and sampling only three instants are all plausible explanations, and no sensitivity study was run to isolate any of them. Naming one would be a guess, so both stay open.</p>
     </section>
     <section class="blk">
       <h2>Scope and limitations</h2>
       <ul class="limits">
         <li>Simulation and CAD only. No physical UR5e, no sensors, no real latte. Nothing here was built or tested on a robot.</li>
-        <li><b>This is not close agreement between the two tools, and it is not presented as such.</b> Joint 2 differs by roughly 57 % (47.68 against 30.41 N·m) and Joint 3 by nearly a factor of two.</li>
-        <li>Approximate link inertias, differing gravity and payload handling between the toolchains, and sampling only three instants are all candidate explanations for the discrepancy. None was isolated by a sensitivity study.</li>
+        <li><b>This is not close agreement between the two tools, and it is not presented as such.</b> Joint 3 differs by nearly a factor of two and fails the stated criterion outright. Joint 2 passes it at roughly 57 % apart (47.68 against 30.41 N·m), which is inside an order of magnitude but nowhere near agreement.</li>
+        <li>Approximate link inertias, differing gravity and payload handling between the toolchains, and sampling only three instants are all candidate explanations. None was isolated by a sensitivity study.</li>
         <li>Against the ± 50 N·m envelope assumed in the course model, the MATLAB peak of ≈ 47.7 N·m leaves little nominal margin. Because the two models disagree materially, this is a screening comparison, not evidence of physical feasibility.</li>
         <li>Force sensing was specified as a proposal only. No sensor was integrated or calibrated.</li>
       </ul>
