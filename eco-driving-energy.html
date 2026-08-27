@@ -1,418 +1,175 @@
 <!DOCTYPE html>
-<html lang="en-GB" data-theme="dark">
+<html lang="en-GB">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script>(function(){try{var s=localStorage.getItem('theme');var t=(s==='light'||s==='dark')?s:(window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
-<title>Eco-Driving Energy Analysis — MATLAB/Simulink Road-Load Model · Mashalakh Mamedov</title>
+<title>Eco-Driving Energy Analysis: MATLAB and Simulink Road-Load Model · Mashalakh Mamedov</title>
 <meta name="description" content="Case study: longitudinal road-load modelling in MATLAB and Simulink quantifying a 9.7 % traction-energy saving from an anticipating eco-driving speed profile, and the derivative mismatch that had to be resolved before the two implementations agreed.">
 <meta name="author" content="Mashalakh Mamedov">
 <meta name="google-site-verification" content="W-Y71ul96LOj-eBEKb1GOZ6LM0tuA-P7PGZmfWH5ZF4">
-<meta name="color-scheme" content="dark light">
-<meta name="theme-color" content="#0e141b" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0D0F12">
 <link rel="canonical" href="https://mashalakhmamedov.github.io/eco-driving-energy.html">
 
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Mashalakh Mamedov">
-<meta property="og:title" content="Eco-Driving Energy Analysis — MATLAB/Simulink Road-Load Model · Mashalakh Mamedov">
+<meta property="og:title" content="Eco-Driving Energy Analysis: MATLAB and Simulink Road-Load Model · Mashalakh Mamedov">
 <meta property="og:description" content="Case study: longitudinal road-load modelling in MATLAB and Simulink quantifying a 9.7 % traction-energy saving from an anticipating eco-driving speed profile, and the derivative mismatch that had to be resolved before the two implementations agreed.">
 <meta property="og:url" content="https://mashalakhmamedov.github.io/eco-driving-energy.html">
 <meta property="og:locale" content="en_GB">
-<meta property="og:image" content="https://mashalakhmamedov.github.io/assets/images/ecodriving__energy_comparison_9p7pct_saving-944.webp">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Mashalakh Mamedov — Mechatronics MSc Candidate">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Eco-Driving Energy Analysis — MATLAB/Simulink Road-Load Model · Mashalakh Mamedov">
+<meta property="og:image" content="https://mashalakhmamedov.github.io/assets/images/ecodriving__simulink_road_load_model-851.webp">
+<meta property="og:image:width" content="851">
+<meta property="og:image:height" content="421">
+<meta property="og:image:alt" content="V2V-Inspired Eco-Driving Energy Analysis: Automotive · Energy modelling">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Eco-Driving Energy Analysis: MATLAB and Simulink Road-Load Model · Mashalakh Mamedov">
 <meta name="twitter:description" content="Case study: longitudinal road-load modelling in MATLAB and Simulink quantifying a 9.7 % traction-energy saving from an anticipating eco-driving speed profile, and the derivative mismatch that had to be resolved before the two implementations agreed.">
-<meta name="twitter:image" content="https://mashalakhmamedov.github.io/assets/images/ecodriving__energy_comparison_9p7pct_saving-944.webp">
-<meta name="twitter:image:alt" content="Mashalakh Mamedov — Mechatronics MSc Candidate">
+<meta name="twitter:image" content="https://mashalakhmamedov.github.io/assets/images/ecodriving__simulink_road_load_model-851.webp">
+<meta name="twitter:image:alt" content="V2V-Inspired Eco-Driving Energy Analysis: Automotive · Energy modelling">
 
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<script>document.documentElement.className="js"</script>
 <link rel="stylesheet" href="styles/site.css">
 </head>
-<body class="is-case">
+<body>
 <a class="skip-link" href="#main">Skip to content</a>
 
-<div class="deco deco--left" aria-hidden="true"><svg class="deco__svg" viewBox="0 0 160 900" fill="none" preserveAspectRatio="xMidYMin slice" aria-hidden="true" focusable="false">
-  <g stroke="currentColor" stroke-width="1.1" stroke-linecap="square">
-    <path d="M18 30 V120 L58 160 V236 H120 V300"/>
-    <path d="M142 40 V96 L104 134 V210"/>
-    <path d="M18 150 H74 L104 180 V262"/>
-    <path d="M142 240 V286 L112 316 V352 H40"/>
-    <path d="M18 330 V392 L66 440"/>
-    <path d="M142 372 V430 H96"/>
-  </g>
-  <g fill="currentColor">
-    <circle cx="18" cy="30" r="3"/><circle cx="58" cy="160" r="3"/>
-    <circle cx="120" cy="300" r="3"/><circle cx="104" cy="134" r="3"/>
-    <circle cx="104" cy="262" r="3"/><circle cx="112" cy="316" r="3"/>
-    <circle cx="66" cy="440" r="3"/><circle cx="96" cy="430" r="3"/>
-  </g>
-
-  <!-- simplified closed-loop control diagram -->
-  <g stroke="currentColor" stroke-width="1.1" fill="none">
-    <circle cx="30" cy="560" r="11"/>
-    <path d="M25 560 H35 M30 555 V565"/>
-    <path d="M4 560 H19"/>
-    <path d="M41 560 H62"/>
-    <rect x="62" y="544" width="42" height="32" rx="2"/>
-    <path d="M104 560 H126"/>
-    <rect x="126" y="544" width="30" height="32" rx="2"/>
-    <path d="M141 576 V614 H30 V571"/>
-    <path d="M70 556 h26 M70 564 h18"/>
-    <path d="M133 556 h16 M133 564 h10"/>
-  </g>
-
-  <g stroke="currentColor" stroke-width="1.1" stroke-linecap="square">
-    <path d="M18 668 V740 L62 784 V860"/>
-    <path d="M142 690 V760 H100 V846"/>
-    <path d="M18 812 H62"/>
-  </g>
-  <g fill="currentColor">
-    <circle cx="62" cy="784" r="3"/><circle cx="100" cy="760" r="3"/>
-  </g>
-</svg></div>
-<div class="deco deco--right" aria-hidden="true"><svg class="deco__svg" viewBox="0 0 160 900" fill="none" preserveAspectRatio="xMidYMin slice" aria-hidden="true" focusable="false">
-  <!-- coordinate grid -->
-  <g stroke="currentColor" stroke-width="0.7" opacity="0.55">
-    <path d="M20 24 H140 M20 64 H140 M20 104 H140 M20 144 H140 M20 184 H140 M20 224 H140 M20 264 H140 M20 304 H140"/>
-    <path d="M20 24 V340 M60 24 V340 M100 24 V340 M140 24 V340"/>
-  </g>
-
-  <!-- sine trace across the grid -->
-  <g stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round">
-    <path d="M80 40 Q125 65 80 90 Q35 115 80 140 Q125 165 80 190 Q35 215 80 240 Q125 265 80 290 Q35 315 80 340"/>
-  </g>
-
-  <!-- unipolar SPWM pulse train -->
-  <g stroke="currentColor" stroke-width="1.1" fill="none" stroke-linejoin="miter">
-    <path d="M50 380 V386 H112 V390 H50 V402 H112 V406 H50 V417 H112 V423 H50 V432 H112 V440 H50 V447 H112 V457 H50 V463 H112 V473 H50 V478 H112 V490 H50 V494 H112 V506 H50 V509 H112 V523 H50 V525 H112 V539 H50 V541 H112 V555 H50 V557 H112 V571 H50 V574 H112 V586 H50 V590 H112 V602 H50 V607 H112 V617 H50 V623 H112 V633 H50 V640 H112 V648 H50 V657 H112 V663 H50 V674 H112 V678 H50 V690 H112 V694 H50 V700"/>
-  </g>
-
-  <!-- robotic coordinate frame -->
-  <g stroke="currentColor" stroke-width="1.1" fill="none">
-    <path d="M40 840 H132 M40 840 V752"/>
-    <path d="M40 840 L96 784"/>
-    <path d="M132 840 l-8 -4 M132 840 l-8 4"/>
-    <path d="M40 752 l-4 8 M40 752 l4 8"/>
-    <path d="M96 784 l-2 9 M96 784 l-9 2"/>
-    <circle cx="40" cy="840" r="3.5" fill="currentColor" stroke="none"/>
-    <path d="M40 800 a40 40 0 0 1 40 40" stroke-dasharray="3 5"/>
-  </g>
-</svg></div>
-
-<header class="masthead">
-  <div class="shell masthead__inner">
-    <a class="masthead__id" href="index.html">
-      <span class="masthead__name">Mashalakh Mamedov</span>
-      <span class="masthead__role">Mechatronics MSc Candidate</span>
-    </a>
-    <div class="masthead__controls">
-      <button class="themetoggle" type="button" id="theme-toggle" aria-label="Switch colour theme" title="Switch colour theme">
-      <svg class="themetoggle__icon themetoggle__icon--sun" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true" focusable="false">
-        <circle cx="12" cy="12" r="4.2"/>
-        <path d="M12 2.6v2.2M12 19.2v2.2M21.4 12h-2.2M4.8 12H2.6M18.6 5.4l-1.6 1.6M7 17l-1.6 1.6M18.6 18.6L17 17M7 7L5.4 5.4"/>
-      </svg>
-      <svg class="themetoggle__icon themetoggle__icon--moon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-        <path d="M20.2 14.4A8.4 8.4 0 0 1 9.6 3.8a8.4 8.4 0 1 0 10.6 10.6z"/>
-      </svg>
-      <span class="u-visually-hidden">Switch colour theme</span>
+<header>
+  <div class="wrap hd">
+    <a class="brand" href="index.html"><span aria-hidden="true">&#9670;</span>Mashalakh Mamedov</a>
+    <button class="navtoggle" type="button" id="navtoggle" aria-expanded="false" aria-controls="primary-nav">
+      <span class="navtoggle__bars" aria-hidden="true"></span>
+      <span class="u-visually-hidden">Menu</span>
     </button>
-      <button class="masthead__toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
-        <span class="masthead__toggle-bars" aria-hidden="true"></span>
-        <span class="u-visually-hidden">Menu</span>
-      </button>
-    </div>
-    <nav class="masthead__nav" id="primary-nav" aria-label="Primary">
-      <a href="index.html#projects">Projects</a>
+    <nav id="primary-nav" aria-label="Primary">
       <a href="index.html#about">About</a>
-      <a href="index.html#experience">Experience</a>
+      <a href="index.html#work">Projects</a>
       <a href="index.html#skills">Skills</a>
+      <a href="index.html#experience">Experience</a>
       <a href="index.html#contact">Contact</a>
-      <a class="masthead__cv" href="assets/files/Mashalakh_Mamedov_CV.pdf" download>CV</a>
     </nav>
   </div>
 </header>
 
-<main id="main">
+<div class="view" id="v-eco">
+<main class="wrap" id="main">
 
-<article class="case">
-  <header class="case__head">
-    <div class="shell shell--narrow">
-      <nav class="crumbs" aria-label="Breadcrumb">
-        <a href="index.html">Projects</a><span aria-hidden="true"> / </span><span>Automotive · Energy modelling</span>
-      </nav>
-      <p class="kicker">Automotive · Energy modelling</p>
-      <h1 class="case__title">V2V-Inspired Eco-Driving Energy Analysis</h1>
-      <p class="case__subtitle">MATLAB and Simulink longitudinal road-load modelling</p>
-      
-<aside class="summary" aria-label="Case study summary">
-  <dl class="summary__list">
-    <div class="summary__row">
-      <dt>Problem</dt>
-      <dd>Establish with numbers whether a V2V-inspired, anticipating speed profile reduces a vehicle's traction energy and fuel use compared with a baseline profile on the same urban route.</dd>
-    </div>
-    <div class="summary__row">
-      <dt>My contribution</dt>
-      <dd>Two-person project. I owned the MATLAB and Simulink vehicle modelling: the longitudinal road-load model, the energy-to-fuel conversion, the parallel Simulink implementation and the reconciliation between the two. My teammate built the SUMO traffic scenario and exported the speed profiles.</dd>
-    </div>
-    <div class="summary__row summary__row--result">
-      <dt>Main result</dt>
-      <dd>881.5 kJ against 795.6 kJ — a 9.7 % traction-energy saving over a 1.29 km route, with fuel equivalent falling from 8.47 to 7.62 L/100 km at about 5 % more trip time.</dd>
-    </div>
-    <div class="summary__row">
-      <dt>What I learned</dt>
-      <dd>Two implementations of the same equation can disagree for purely numerical reasons. <code>gradient</code>(v,t) and Simulink's Derivative block define acceleration differently, and the integration methods differed too. Aligning both is a consistency check, not independent validation, and saying so matters.</dd>
-    </div>
-    <div class="summary__row summary__row--nature">
-      <dt>Project nature</dt>
-      <dd>Two-person MSc project · Simulation only · 2026</dd>
-    </div>
-  </dl>
-</aside>
-      <dl class="case__context">
-        <div><dt>Course</dt><dd>MSc Powertrain Technologies for Future Mobility</dd></div>
-        <div><dt>Institution</dt><dd>University of Rome Tor Vergata</dd></div>
-        <div><dt>Date</dt><dd>2026</dd></div>
-        <div><dt>Team</dt><dd>Two-person project — I owned the MATLAB/Simulink vehicle model</dd></div>
-        <div><dt>Nature</dt><dd>Simulation only</dd></div>
-      </dl>
-    </div>
-  </header>
+  <a class="back" href="index.html#work">&larr; All work</a>
 
-  <figure class="case__hero">
-    <div class="shell">
-      <div class="framed framed--hero">
-        <img
-        class="case__heroimg"
-        src="assets/images/ecodriving__energy_comparison_9p7pct_saving-944.webp"
-        srcset="assets/images/ecodriving__energy_comparison_9p7pct_saving-640.webp 640w, assets/images/ecodriving__energy_comparison_9p7pct_saving-944.webp 944w"
-        sizes="(max-width: 1100px) 100vw, 1100px"
-        width="944"
-        height="583"
-        loading="eager"
-        decoding="async"
-        alt="Bar chart comparing baseline and eco traction energy totals.">
-      </div>
-      <figcaption>Total traction energy, baseline against eco — a 9.7 % saving over a 1.29 km urban route, at the cost of about 5 % more trip time.</figcaption>
-    </div>
-  </figure>
-
-  <div class="shell">
-    <dl class="metrics metrics--case">
-      <div class="metric"><dt class="metric__value">9.7 %</dt><dd class="metric__label">traction-energy saving, 881.5 kJ → 795.6 kJ</dd></div>
-<div class="metric"><dt class="metric__value">0.0 %</dt><dd class="metric__label">script against Simulink after aligning both implementations — a consistency check, not independent validation</dd></div>
-<div class="metric"><dt class="metric__value">8.47 → 7.62</dt><dd class="metric__label">L/100 km fuel equivalent, baseline against eco</dd></div>
+  <div class="phead">
+    <p class="pk">04 · Automotive · Energy modelling</p>
+    <h1>V2V-Inspired Eco-Driving Energy Analysis</h1>
+    <p class="lede">Answer one question with numbers: can an anticipating speed profile measurably reduce a vehicle's traction energy on the same urban route? V2V here is an advisory assumption, not a radio link.</p>
+    <dl class="meta">
+      <div><dt>Course</dt><dd>MSc Powertrain Technologies for Future Mobility</dd></div>
+      <div><dt>Date</dt><dd>2026</dd></div>
+      <div><dt>Team</dt><dd>Two-person. I owned the MATLAB/Simulink vehicle model</dd></div>
+      <div><dt>Nature</dt><dd>Simulation only</dd></div>
     </dl>
   </div>
 
-  <div class="shell shell--narrow case__body">
-    
-<section class="case__block js-reveal" id="problem" aria-labelledby="problem-heading">
-  <p class="case__blocklabel">01</p>
-  <h2 class="case__blockheading" id="problem-heading">Problem</h2>
-  <div class="prose"><p>Answer one question with numbers: can a V2V-inspired eco-driving speed advisory measurably reduce a vehicle's traction energy and fuel consumption compared with a baseline profile on the same urban route?</p>
-<p>V2V here is an advisory assumption, not a radio link. The model represents a driver who anticipates traffic ahead and therefore drives a smoother speed profile, and the project quantifies the energy benefit of that anticipation.</p></div>
-</section>
+  <div class="pbody">
+    <section class="blk">
+      <figure class="hfig"><img src="assets/images/ecodriving__simulink_road_load_model-851.webp" srcset="assets/images/ecodriving__simulink_road_load_model-640.webp 640w, assets/images/ecodriving__simulink_road_load_model-851.webp 851w" sizes="(max-width: 1060px) 100vw, 1004px" width="851" height="421" loading="eager" decoding="async" alt="Simulink vehicle energy model">
+        <figcaption><span class="fig">FIG 01</span><span>The Simulink vehicle model I built. Speed and acceleration in, mass, rolling and aerodynamic terms summed into road-load force, multiplied by speed for power, clipped to positive so braking is not counted as fuel, then integrated to energy out.</span></figcaption></figure>
+    </section>
+    <section class="blk">
+      <div class="callout"><p class="lab">Headline result</p>
+        <p>Baseline traction energy <span class="mono">881.5 kJ</span> against <span class="mono">795.6 kJ</span> for the eco profile. A <span class="mono">9.7 %</span> saving over a 1.29 km route, at the cost of about 5 % more trip time.</p></div>
+    </section>
+    <section class="blk">
+      <h2>What the project was given</h2>
+      <p>The input to my side of the project was two speed profiles exported from my teammate's SUMO traffic scenario on an OpenStreetMap-imported urban route: a reactive baseline and a gentler anticipating profile. The interface between the two workstreams was one CSV with a fixed two-column contract, time in seconds and speed in metres per second, at 1 s steps. That file is the only thing that crossed between us.</p>
+      <p>The vehicle is a 1300 kg car with a 0.30 drag coefficient, 2.2 m² frontal area, 0.012 rolling resistance and a constant 0.25 engine efficiency, on a flat road. Where that parameter set came from is not recorded anywhere in the project files, so I cannot say whether the course supplied it or we chose it.</p>
+    </section>
+    <section class="blk">
+      <h2>What the goal was</h2>
+      <p>One question, answered with numbers: does an anticipating speed profile measurably reduce traction energy on the same urban route? No threshold was set for what would count as meaningful, so the result is reported as a measured difference.</p>
+    </section>
+    <section class="blk">
+      <h2>What I did</h2>
+      <p>The MATLAB and Simulink vehicle-modelling workstream: the longitudinal road-load model, the energy-to-fuel conversion and per-100 km normalisation, the parallel Simulink block implementation, the reconciliation between script and block model, and the comparison script and results plots.</p>
+      <p><b>My teammate built the SUMO microscopic traffic scenario</b> and exported the two ego speed profiles. The two workstreams met at a single interface: his speed profiles, my energy model.</p>
+      <p>Fuel equivalent falls from 8.47 to 7.62 L/100 km. Mean absolute acceleration falls from 1.05 to <span class="mono">0.88 m/s²</span>, a reduction of about 16 %. Because the two runs differ slightly in distance (0.3 %) and time (5 %), the saving is reported per kilometre rather than as a raw total.</p>
+    </section>
+    <section class="blk">
+      <div class="codewrap">
+        <div class="codehd"><b>SOURCE</b><span>run_energy.m · MATLAB</span></div>
+<pre><span class="c">% ---- VEHICLE PARAMETERS ----</span>
+m   = 1300;      <span class="c">% kg     car mass</span>
+Cd  = 0.30;      <span class="c">% -      drag coefficient</span>
+A   = 2.2;       <span class="c">% m^2    frontal area</span>
+Cr  = 0.012;     <span class="c">% -      rolling resistance</span>
+eta = 0.25;      <span class="c">% -      engine efficiency</span>
 
-    
-<section class="case__block js-reveal" id="ownership" aria-labelledby="ownership-heading">
-  <p class="case__blocklabel">02</p>
-  <h2 class="case__blockheading" id="ownership-heading">What I contributed</h2>
-  <div class="prose"><p class="credit credit--mine"><span class="credit__label">My responsibility</span>The MATLAB/Simulink vehicle-modelling workstream: the longitudinal road-load model, the energy-to-fuel conversion and per-100 km normalisation, the parallel Simulink block implementation, the reconciliation between script and block model including the derivative and solver fix, and the comparison script and results plots.</p><p class="credit credit--theirs"><span class="credit__label">Teammate's responsibility</span>My teammate built the SUMO microscopic traffic scenario on an OpenStreetMap-imported route and exported the two ego speed profiles. The two workstreams met at a single CSV.</p><p class="credit credit--team"><span class="credit__label">Result belonging to the whole team</span>The 9.7 % saving is a joint result: it depends on my teammate's SUMO speed profiles and on my vehicle model equally. Neither half produces it alone.</p></div>
-</section>
+<span class="c">% ---- PHYSICS ----</span>
+a     = gradient(v, t);                          <span class="c">% acceleration (m/s^2)</span>
+F     = m.*a + Cr*m*g + 0.5*rho*Cd*A.*v.^2;      <span class="c">% road-load force (N)</span>
+P     = F .* v;                                  <span class="c">% power (W)</span>
+P_pos = max(P, 0);                               <span class="c">% engine only pushes</span>
+E_J   = cumtrapz(t, P_pos);                      <span class="c">% cumulative energy (J)</span>
 
-    
-<section class="case__block js-reveal" id="method" aria-labelledby="method-heading">
-  <p class="case__blocklabel">03</p>
-  <h2 class="case__blockheading" id="method-heading">Method</h2>
-  <div class="prose"><ol class="steps"><li>The two workstreams are coupled offline through one CSV with a fixed two-column contract — time_s, speed_ms, 1 s steps — which is the only interface between them.</li>
-<li>Two driving behaviours came from two SUMO vehicle types: a reactive baseline and a gentler anticipating eco profile.</li>
-<li>Longitudinal road-load model on a flat road: P(t) = [m·a + C_r·m·g + ½·ρ·C_d·A·v²]·v, with traction energy E = ∫ max(P, 0) dt — positive power only, because an internal-combustion powertrain recovers nothing from braking.</li>
-<li>Script implementation: a = <code>gradient</code>(v,t) → force sum → max(F·v, 0) → <code>cumtrapz</code>.</li>
-<li>Parallel Simulink implementation of the same equation as a block diagram, with a Saturation block enforcing positive power and an Integrator producing energy.</li>
-<li>Traction energy converted to fuel via η = 0.25 and 32.3 MJ/L, then normalised per 100 km using trapezoidal distance from the speed profile.</li>
-<li>Vehicle parameters: m = 1300 kg, C_d = 0.30, A = 2.2 m², C_r = 0.012, ρ = 1.20 kg/m³, η_ICE = 0.25, flat road.</li></ol></div>
-</section>
+<span class="c">% ---- NORMALISE ----</span>
+dist_km     = trapz(t, v) / 1000;
+fuel_L      = (E_total/eta) / energy_per_litre;
+L_per_100km = fuel_L / dist_km * 100;</pre>
+      </div>
+    </section>
+    <section class="blk">
+      <h2>What went wrong, and the fix</h2>
+      <p>The Simulink model and the MATLAB script gave different answers for the same speed profile, and the cause turned out to be numerical rather than physical. <span class="mono">gradient(v,t)</span> uses a central difference, while the Simulink Derivative block takes the one-sided slope of the linear interpolation. On a jittery 1 Hz speed trace with large second-to-second slope changes, those two definitions of acceleration diverge substantially. The integration methods differed as well.</p>
+      <p>The size of that disagreement before the fix was never written down, so I cannot quote it.</p>
+      <p>I bypassed the Derivative block entirely, pre-computed acceleration in MATLAB and fed it to the model as a second <span class="mono">From Workspace</span> input, then switched the solver to fixed-step <span class="mono">ode2</span> at a 1 s step, which applies the trapezoidal rule exactly at the data points and so matches <span class="mono">cumtrapz</span>. Both scenarios then came out at 0.0 % discrepancy.</p>
+      <p>The trade-off is in what that number can be used for. The two implementations are now aligned rather than independently derived, so it is a consistency check that both solve the same equation, and nothing more.</p>
+    </section>
+    <section class="blk">
+      <div class="two">
+        <figure class="hfig"><img src="assets/images/ecodriving__speed_profile_baseline_vs_eco-913.webp" srcset="assets/images/ecodriving__speed_profile_baseline_vs_eco-640.webp 640w, assets/images/ecodriving__speed_profile_baseline_vs_eco-913.webp 913w" sizes="(max-width: 880px) 100vw, 487px" width="913" height="592" loading="lazy" decoding="async" alt="Baseline against eco speed profile">
+        <figcaption><span class="fig">FIG 02</span><span>Baseline against eco speed profile over the same 1.29 km urban route.</span></figcaption></figure>
+        <figure class="hfig"><img src="assets/images/ecodriving__energy_comparison_9p7pct_saving-944.webp" srcset="assets/images/ecodriving__energy_comparison_9p7pct_saving-640.webp 640w, assets/images/ecodriving__energy_comparison_9p7pct_saving-944.webp 944w" sizes="(max-width: 880px) 100vw, 487px" width="944" height="583" loading="lazy" decoding="async" alt="Traction energy comparison showing the 9.7 percent saving">
+        <figcaption><span class="fig">FIG 03</span><span>Traction energy for the two profiles, 881.5 kJ against 795.6 kJ. The 9.7 % saving in one bar chart.</span></figcaption></figure>
+      </div>
+    </section>
+    <section class="blk">
+      <figure class="hfig"><img src="assets/images/ecodriving__cumulative_traction_energy-966.webp" srcset="assets/images/ecodriving__cumulative_traction_energy-640.webp 640w, assets/images/ecodriving__cumulative_traction_energy-960.webp 960w, assets/images/ecodriving__cumulative_traction_energy-966.webp 966w" sizes="(max-width: 1060px) 100vw, 1004px" width="966" height="603" loading="lazy" decoding="async" alt="Cumulative traction energy over the route for both profiles">
+        <figcaption><span class="fig">FIG 04</span><span>Cumulative traction energy along the route. The gap opens at the acceleration events, which is where an anticipating profile does its work.</span></figcaption></figure>
+    </section>
+    <section class="blk">
+      <h2>What was not overcome</h2>
+      <p>The route never produces a full stop. The vehicle slows to about 4 m/s and keeps rolling, so this is congestion oscillation rather than stop-and-go traffic, and the saving does not carry over to an urban cycle with standing starts.</p>
+      <p>The sample is one short route, one ego vehicle and a window of roughly two minutes. Nothing here establishes that the effect holds at other speeds, on gradients, or at other traffic densities, and no attempt was made to test that.</p>
+    </section>
+    <section class="blk">
+      <h2>Scope and limitations</h2>
+      <ul class="limits">
+        <li>V2V is an assumption, not an implementation. No radio link, no protocol, no communication model.</li>
+        <li>The 0.0 % agreement between script and Simulink is a <b>consistency check</b> after aligning both implementations, not independent validation.</li>
+        <li>Simulink, not Simscape. A block-diagram implementation of the same equations, not a physical network model.</li>
+        <li>Constant average engine efficiency, a flat road, no engine map and no gearbox model.</li>
+        <li>Simulation only. No vehicle, no dynamometer, no measured fuel.</li>
+        <li>The SUMO traffic scenario is my teammate's workstream and is not claimed as my tool.</li>
+      </ul>
+    </section>
 
-    
-<section class="case__block js-reveal" id="result" aria-labelledby="result-heading">
-  <p class="case__blocklabel">04</p>
-  <h2 class="case__blockheading" id="result-heading">Result</h2>
-  <div class="prose"><p>Baseline traction energy 881.5 kJ against 795.6 kJ for the eco profile — a 9.7 % saving over a 1.29 km route, roughly 10 % per kilometre, at the cost of about 5 % more trip time.</p>
-<p>Fuel equivalent falls from 8.47 to 7.62 L/100 km. Mean absolute acceleration falls from 1.05 to 0.88 m/s². Because the two runs differ slightly in distance (0.3 %) and time (5 %), the saving is reported per kilometre rather than as a raw total.</p></div>
-</section>
-
-    
-<section class="case__block js-reveal" id="diagnosis" aria-labelledby="diagnosis-heading">
-  <p class="case__blocklabel">05</p>
-  <h2 class="case__blockheading" id="diagnosis-heading">What went wrong, and what the symptom meant</h2>
-  <div class="prose"><p>Early Simulink runs disagreed with the script's 881.5 kJ baseline. A physics or parameter error was the obvious suspect; the cause turned out to be numerical.</p>
-<p><code>gradient</code>(v,t) uses central differences, a[n] = (v[n+1] − v[n−1]) / 2, while Simulink's Derivative block takes the one-sided slope of the linear interpolation, a[n] = (v[n+1] − v[n]). On a jittery 1 Hz SUMO speed trace with large second-to-second slope changes, those two definitions of acceleration diverge substantially. The integration methods also differed.</p></div>
-</section>
-
-    
-<section class="case__block js-reveal" id="resolution" aria-labelledby="resolution-heading">
-  <p class="case__blocklabel">06</p>
-  <h2 class="case__blockheading" id="resolution-heading">What I changed</h2>
-  <div class="prose"><p>I bypassed the Simulink Derivative block entirely: acceleration is pre-computed in MATLAB with <code>gradient</code>(v,t) and fed to the model as a second <code>From Workspace</code> input, forcing both implementations to use the identical derivative.</p>
-<p>I aligned the integration too, switching to a fixed-step <code>ode2</code> (Heun) solver at dt = 1 s, which applies the trapezoidal rule exactly at the 1-second data points — mathematically equivalent to <code>cumtrapz</code>. The two implementations then matched to 0.0 % discrepancy on both scenarios.</p></div>
-</section>
-
-    
-<section class="case__block js-reveal" id="limitations" aria-labelledby="limitations-heading">
-  <p class="case__blocklabel">07</p>
-  <h2 class="case__blockheading" id="limitations-heading">Scope and limitations</h2>
-  <div class="prose"><ul class="bullets bullets--limits"><li>V2V is an assumption, not a simulation. No radio link, no protocol, no latency model. What is modelled is perfect anticipation of traffic ahead, represented as a smoother speed profile.</li>
-<li>The MATLAB–Simulink agreement is an implementation-consistency check, not independent validation. The two implementations were aligned rather than developed independently.</li>
-<li>Simulink, not Simscape.</li>
-<li>Very small sample: one short route, one ego vehicle, a roughly two-minute window.</li>
-<li>Constant average ICE efficiency (0.25), flat road, no engine map, no gearbox model.</li>
-<li>The vehicle slows to about 4 m/s but never fully stops — congestion oscillation, not stop-and-go — so the result does not generalise to a full urban stop-and-go cycle.</li>
-<li>Simulation only. No vehicle, no dynamometer, no road test. SUMO is my teammate's tool, not mine.</li></ul></div>
-</section>
+    <nav class="nextp" aria-label="Other projects">
+      <a href="robolatte-ur5e.html">&larr; RoboLatte, UR5e Dynamic Simulation</a>
+      <a href="mobile-manipulator.html">Next: Remotely Controlled Robotic Manipulator &rarr;</a>
+    </nav>
   </div>
-
-  <section class="case__gallery js-reveal" id="evidence" aria-labelledby="evidence-heading">
-    <div class="shell">
-      <p class="case__blocklabel">08</p>
-      <h2 class="case__blockheading" id="evidence-heading">Evidence</h2>
-      <div class="gallery">
-        <figure class="figure">
-          <button class="figure__zoom framed" type="button" data-caption="The Simulink road-load model. Speed enters from the workspace, acceleration is supplied pre-computed to match the script's gradient derivative, the three resistance terms are summed into force, power is saturated at zero — no regeneration — and integrated to traction energy." aria-label="Enlarge figure: Simulink block diagram of a longitudinal road-load model with summing, saturation and integrator blocks.">
-            <img
-        class=""
-        src="assets/images/ecodriving__simulink_road_load_model-851.webp"
-        srcset="assets/images/ecodriving__simulink_road_load_model-640.webp 640w, assets/images/ecodriving__simulink_road_load_model-851.webp 851w"
-        sizes="(max-width: 800px) 100vw, 46vw"
-        width="851"
-        height="421"
-        loading="eager"
-        decoding="async"
-        alt="Simulink block diagram of a longitudinal road-load model with summing, saturation and integrator blocks.">
-            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
-          </button>
-          <figcaption>The Simulink road-load model. Speed enters from the workspace, acceleration is supplied pre-computed to match the script's gradient derivative, the three resistance terms are summed into force, power is saturated at zero — no regeneration — and integrated to traction energy.</figcaption>
-        </figure>
-<figure class="figure">
-          <button class="figure__zoom framed" type="button" data-caption="Ego-vehicle speed profiles over the same urban route: reactive baseline against the anticipating eco profile. The eco trace makes the same trip with shallower decelerations and gentler recoveries." aria-label="Enlarge figure: Two overlaid speed-versus-time traces, one jagged and one smoother.">
-            <img
-        class=""
-        src="assets/images/ecodriving__speed_profile_baseline_vs_eco-913.webp"
-        srcset="assets/images/ecodriving__speed_profile_baseline_vs_eco-640.webp 640w, assets/images/ecodriving__speed_profile_baseline_vs_eco-913.webp 913w"
-        sizes="(max-width: 800px) 100vw, 46vw"
-        width="913"
-        height="592"
-        loading="eager"
-        decoding="async"
-        alt="Two overlaid speed-versus-time traces, one jagged and one smoother.">
-            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
-          </button>
-          <figcaption>Ego-vehicle speed profiles over the same urban route: reactive baseline against the anticipating eco profile. The eco trace makes the same trip with shallower decelerations and gentler recoveries.</figcaption>
-        </figure>
-<figure class="figure">
-          <button class="figure__zoom framed" type="button" data-caption="Cumulative traction energy for both profiles. The gap opens at every acceleration event and never closes, ending at 881.5 kJ against 795.6 kJ." aria-label="Enlarge figure: Two rising cumulative energy curves diverging over time.">
-            <img
-        class=""
-        src="assets/images/ecodriving__cumulative_traction_energy-966.webp"
-        srcset="assets/images/ecodriving__cumulative_traction_energy-640.webp 640w, assets/images/ecodriving__cumulative_traction_energy-960.webp 960w, assets/images/ecodriving__cumulative_traction_energy-966.webp 966w"
-        sizes="(max-width: 800px) 100vw, 46vw"
-        width="966"
-        height="603"
-        loading="lazy"
-        decoding="async"
-        alt="Two rising cumulative energy curves diverging over time.">
-            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
-          </button>
-          <figcaption>Cumulative traction energy for both profiles. The gap opens at every acceleration event and never closes, ending at 881.5 kJ against 795.6 kJ.</figcaption>
-        </figure>
-<figure class="figure">
-          <button class="figure__zoom framed" type="button" data-caption="Total traction energy, baseline against eco — a 9.7 % saving over a 1.29 km urban route, at the cost of about 5 % more trip time." aria-label="Enlarge figure: Bar chart comparing baseline and eco traction energy totals.">
-            <img
-        class=""
-        src="assets/images/ecodriving__energy_comparison_9p7pct_saving-944.webp"
-        srcset="assets/images/ecodriving__energy_comparison_9p7pct_saving-640.webp 640w, assets/images/ecodriving__energy_comparison_9p7pct_saving-944.webp 944w"
-        sizes="(max-width: 800px) 100vw, 46vw"
-        width="944"
-        height="583"
-        loading="lazy"
-        decoding="async"
-        alt="Bar chart comparing baseline and eco traction energy totals.">
-            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
-          </button>
-          <figcaption>Total traction energy, baseline against eco — a 9.7 % saving over a 1.29 km urban route, at the cost of about 5 % more trip time.</figcaption>
-        </figure>
-<figure class="figure">
-          <button class="figure__zoom framed" type="button" data-caption="MATLAB console output for both scenarios: distance, traction energy, fuel equivalent, energy per 100 km and mean absolute acceleration. This screenshot is the primary source for every number quoted on this page." aria-label="Enlarge figure: MATLAB command window output listing distance, energy and fuel figures for two scenarios.">
-            <img
-        class=""
-        src="assets/images/ecodriving__matlab_console_results_baseline_vs_eco-937.webp"
-        srcset="assets/images/ecodriving__matlab_console_results_baseline_vs_eco-640.webp 640w, assets/images/ecodriving__matlab_console_results_baseline_vs_eco-937.webp 937w"
-        sizes="(max-width: 800px) 100vw, 46vw"
-        width="937"
-        height="708"
-        loading="lazy"
-        decoding="async"
-        alt="MATLAB command window output listing distance, energy and fuel figures for two scenarios.">
-            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
-          </button>
-          <figcaption>MATLAB console output for both scenarios: distance, traction energy, fuel equivalent, energy per 100 km and mean absolute acceleration. This screenshot is the primary source for every number quoted on this page.</figcaption>
-        </figure>
-      </div>
-      
-      <p class="note">Source code, models and CAD files for this project are not published. I am happy to walk through them on request.</p>
-    </div>
-  </section>
-
-  <nav class="pagenav" aria-label="Other projects">
-    <div class="shell pagenav__inner">
-      <a class="pagenav__link pagenav__link--prev" href="robolatte-ur5e.html"><span class="pagenav__dir">Previous</span><span class="pagenav__title">RoboLatte — UR5e Dynamic Simulation</span></a>
-      <a class="pagenav__link pagenav__link--next" href="mobile-manipulator.html"><span class="pagenav__dir">Next</span><span class="pagenav__title">Remotely Operated Mobile Manipulator</span></a>
-    </div>
-  </nav>
-
-  <section class="section section--contact">
-    <div class="shell shell--narrow">
-      <h2 class="section__title">Get in touch</h2>
-      <p class="contact__lede">Six months preferred; 6–12 months workable. Based in Rome, willing to relocate throughout Europe — Germany, the Netherlands and Denmark included.</p>
-      <div class="contact__actions">
-        <a class="btn btn--primary btn--lg" href="mailto:mashalakh.mamedov1@gmail.com">mashalakh.mamedov1@gmail.com</a>
-        <a class="btn btn--lg" href="https://www.linkedin.com/in/mashalakh/" rel="me noopener">LinkedIn</a>
-        <a class="btn btn--lg" href="assets/files/Mashalakh_Mamedov_CV.pdf" download>Download CV (PDF)</a>
-      </div>
-    </div>
-  </section>
-</article>
 
 </main>
 
-<footer class="footer">
-  <div class="shell footer__inner">
-    <div class="footer__col">
-      <p class="footer__name">Mashalakh Mamedov</p>
-      <p class="footer__meta">Rome, Italy · Available for 6–12 month internships from October 2026 · Open to relocation across Europe</p>
-    </div>
-    <div class="footer__col footer__links">
-      <a href="mailto:mashalakh.mamedov1@gmail.com">mashalakh.mamedov1@gmail.com</a>
-      <a href="tel:+393447816935">+39 344 781 6935</a>
-      <a href="https://www.linkedin.com/in/mashalakh/" rel="me noopener">linkedin.com/in/mashalakh</a>
-      <a href="assets/files/Mashalakh_Mamedov_CV.pdf" download>CV (PDF)</a>
-    </div>
-    <p class="footer__legal">
-      Segmentation overlays are derived from the Roboflow “Fire and Smoke Segmentation”
-      dataset, used under <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener">CC BY 4.0</a>.
-      All other figures are my own or my project team's output. Last updated 2026-08-11.
-    </p>
+<footer class="wrap">
+  <div>Mashalakh Mamedov · Rome, Italy</div>
+  <div class="footlinks">
+    <a class="lnk" href="mailto:mashalakh.mamedov1@gmail.com">Email</a>
+    <a class="lnk" href="https://www.linkedin.com/in/mashalakh/" rel="me noopener">LinkedIn</a>
+    <a class="lnk" href="https://github.com/MashalakhMamedov" rel="me noopener">GitHub</a>
+    <a class="lnk" href="assets/files/Mashalakh_Mamedov_CV.pdf" download>CV (PDF)</a>
   </div>
+  <p class="footlegal">Segmentation overlays are derived from the Roboflow &quot;Fire and Smoke Segmentation&quot; dataset, used under <a class="lnk" href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">CC BY 4.0</a>. All other figures are my own or my project team's output. Last updated 2026-08-27.</p>
 </footer>
-
-<dialog class="lightbox" id="lightbox" aria-label="Enlarged figure">
-  <button class="lightbox__close" type="button" aria-label="Close figure">&times;</button>
-  <div class="lightbox__stage"></div>
-  <p class="lightbox__caption"></p>
-</dialog>
+</div>
 
 <script src="scripts/site.js" defer></script>
 </body>

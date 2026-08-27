@@ -1,431 +1,167 @@
 <!DOCTYPE html>
-<html lang="en-GB" data-theme="dark">
+<html lang="en-GB">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script>(function(){try{var s=localStorage.getItem('theme');var t=(s==='light'||s==='dark')?s:(window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
-<title>UR5e Dynamic Simulation — Inventor CAD Dynamics vs MATLAB · Mashalakh Mamedov</title>
+<title>UR5e Dynamic Simulation: Inventor CAD Dynamics against MATLAB · Mashalakh Mamedov</title>
 <meta name="description" content="Case study: a UR5e beverage task modelled in Autodesk Inventor Dynamic Simulation and checked against an analytical MATLAB inverse-dynamics model of the same motion, with the joint-torque discrepancies reported rather than smoothed over.">
 <meta name="author" content="Mashalakh Mamedov">
 <meta name="google-site-verification" content="W-Y71ul96LOj-eBEKb1GOZ6LM0tuA-P7PGZmfWH5ZF4">
-<meta name="color-scheme" content="dark light">
-<meta name="theme-color" content="#0e141b" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0D0F12">
 <link rel="canonical" href="https://mashalakhmamedov.github.io/robolatte-ur5e.html">
 
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Mashalakh Mamedov">
-<meta property="og:title" content="UR5e Dynamic Simulation — Inventor CAD Dynamics vs MATLAB · Mashalakh Mamedov">
+<meta property="og:title" content="UR5e Dynamic Simulation: Inventor CAD Dynamics against MATLAB · Mashalakh Mamedov">
 <meta property="og:description" content="Case study: a UR5e beverage task modelled in Autodesk Inventor Dynamic Simulation and checked against an analytical MATLAB inverse-dynamics model of the same motion, with the joint-torque discrepancies reported rather than smoothed over.">
 <meta property="og:url" content="https://mashalakhmamedov.github.io/robolatte-ur5e.html">
 <meta property="og:locale" content="en_GB">
-<meta property="og:image" content="https://mashalakhmamedov.github.io/assets/images/robolatte__inventor_driving_force_output_grapher-1400.webp">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Mashalakh Mamedov — Mechatronics MSc Candidate">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="UR5e Dynamic Simulation — Inventor CAD Dynamics vs MATLAB · Mashalakh Mamedov">
+<meta property="og:image" content="https://mashalakhmamedov.github.io/assets/images/robolatte__ur5e_clean-1120.webp">
+<meta property="og:image:width" content="1120">
+<meta property="og:image:height" content="860">
+<meta property="og:image:alt" content="RoboLatte, UR5e Dynamic Simulation: Robotics · CAD dynamics">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="UR5e Dynamic Simulation: Inventor CAD Dynamics against MATLAB · Mashalakh Mamedov">
 <meta name="twitter:description" content="Case study: a UR5e beverage task modelled in Autodesk Inventor Dynamic Simulation and checked against an analytical MATLAB inverse-dynamics model of the same motion, with the joint-torque discrepancies reported rather than smoothed over.">
-<meta name="twitter:image" content="https://mashalakhmamedov.github.io/assets/images/robolatte__inventor_driving_force_output_grapher-1400.webp">
-<meta name="twitter:image:alt" content="Mashalakh Mamedov — Mechatronics MSc Candidate">
+<meta name="twitter:image" content="https://mashalakhmamedov.github.io/assets/images/robolatte__ur5e_clean-1120.webp">
+<meta name="twitter:image:alt" content="RoboLatte, UR5e Dynamic Simulation: Robotics · CAD dynamics">
 
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<script>document.documentElement.className="js"</script>
 <link rel="stylesheet" href="styles/site.css">
 </head>
-<body class="is-case">
+<body>
 <a class="skip-link" href="#main">Skip to content</a>
 
-<div class="deco deco--left" aria-hidden="true"><svg class="deco__svg" viewBox="0 0 160 900" fill="none" preserveAspectRatio="xMidYMin slice" aria-hidden="true" focusable="false">
-  <g stroke="currentColor" stroke-width="1.1" stroke-linecap="square">
-    <path d="M18 30 V120 L58 160 V236 H120 V300"/>
-    <path d="M142 40 V96 L104 134 V210"/>
-    <path d="M18 150 H74 L104 180 V262"/>
-    <path d="M142 240 V286 L112 316 V352 H40"/>
-    <path d="M18 330 V392 L66 440"/>
-    <path d="M142 372 V430 H96"/>
-  </g>
-  <g fill="currentColor">
-    <circle cx="18" cy="30" r="3"/><circle cx="58" cy="160" r="3"/>
-    <circle cx="120" cy="300" r="3"/><circle cx="104" cy="134" r="3"/>
-    <circle cx="104" cy="262" r="3"/><circle cx="112" cy="316" r="3"/>
-    <circle cx="66" cy="440" r="3"/><circle cx="96" cy="430" r="3"/>
-  </g>
-
-  <!-- simplified closed-loop control diagram -->
-  <g stroke="currentColor" stroke-width="1.1" fill="none">
-    <circle cx="30" cy="560" r="11"/>
-    <path d="M25 560 H35 M30 555 V565"/>
-    <path d="M4 560 H19"/>
-    <path d="M41 560 H62"/>
-    <rect x="62" y="544" width="42" height="32" rx="2"/>
-    <path d="M104 560 H126"/>
-    <rect x="126" y="544" width="30" height="32" rx="2"/>
-    <path d="M141 576 V614 H30 V571"/>
-    <path d="M70 556 h26 M70 564 h18"/>
-    <path d="M133 556 h16 M133 564 h10"/>
-  </g>
-
-  <g stroke="currentColor" stroke-width="1.1" stroke-linecap="square">
-    <path d="M18 668 V740 L62 784 V860"/>
-    <path d="M142 690 V760 H100 V846"/>
-    <path d="M18 812 H62"/>
-  </g>
-  <g fill="currentColor">
-    <circle cx="62" cy="784" r="3"/><circle cx="100" cy="760" r="3"/>
-  </g>
-</svg></div>
-<div class="deco deco--right" aria-hidden="true"><svg class="deco__svg" viewBox="0 0 160 900" fill="none" preserveAspectRatio="xMidYMin slice" aria-hidden="true" focusable="false">
-  <!-- coordinate grid -->
-  <g stroke="currentColor" stroke-width="0.7" opacity="0.55">
-    <path d="M20 24 H140 M20 64 H140 M20 104 H140 M20 144 H140 M20 184 H140 M20 224 H140 M20 264 H140 M20 304 H140"/>
-    <path d="M20 24 V340 M60 24 V340 M100 24 V340 M140 24 V340"/>
-  </g>
-
-  <!-- sine trace across the grid -->
-  <g stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round">
-    <path d="M80 40 Q125 65 80 90 Q35 115 80 140 Q125 165 80 190 Q35 215 80 240 Q125 265 80 290 Q35 315 80 340"/>
-  </g>
-
-  <!-- unipolar SPWM pulse train -->
-  <g stroke="currentColor" stroke-width="1.1" fill="none" stroke-linejoin="miter">
-    <path d="M50 380 V386 H112 V390 H50 V402 H112 V406 H50 V417 H112 V423 H50 V432 H112 V440 H50 V447 H112 V457 H50 V463 H112 V473 H50 V478 H112 V490 H50 V494 H112 V506 H50 V509 H112 V523 H50 V525 H112 V539 H50 V541 H112 V555 H50 V557 H112 V571 H50 V574 H112 V586 H50 V590 H112 V602 H50 V607 H112 V617 H50 V623 H112 V633 H50 V640 H112 V648 H50 V657 H112 V663 H50 V674 H112 V678 H50 V690 H112 V694 H50 V700"/>
-  </g>
-
-  <!-- robotic coordinate frame -->
-  <g stroke="currentColor" stroke-width="1.1" fill="none">
-    <path d="M40 840 H132 M40 840 V752"/>
-    <path d="M40 840 L96 784"/>
-    <path d="M132 840 l-8 -4 M132 840 l-8 4"/>
-    <path d="M40 752 l-4 8 M40 752 l4 8"/>
-    <path d="M96 784 l-2 9 M96 784 l-9 2"/>
-    <circle cx="40" cy="840" r="3.5" fill="currentColor" stroke="none"/>
-    <path d="M40 800 a40 40 0 0 1 40 40" stroke-dasharray="3 5"/>
-  </g>
-</svg></div>
-
-<header class="masthead">
-  <div class="shell masthead__inner">
-    <a class="masthead__id" href="index.html">
-      <span class="masthead__name">Mashalakh Mamedov</span>
-      <span class="masthead__role">Mechatronics MSc Candidate</span>
-    </a>
-    <div class="masthead__controls">
-      <button class="themetoggle" type="button" id="theme-toggle" aria-label="Switch colour theme" title="Switch colour theme">
-      <svg class="themetoggle__icon themetoggle__icon--sun" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true" focusable="false">
-        <circle cx="12" cy="12" r="4.2"/>
-        <path d="M12 2.6v2.2M12 19.2v2.2M21.4 12h-2.2M4.8 12H2.6M18.6 5.4l-1.6 1.6M7 17l-1.6 1.6M18.6 18.6L17 17M7 7L5.4 5.4"/>
-      </svg>
-      <svg class="themetoggle__icon themetoggle__icon--moon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-        <path d="M20.2 14.4A8.4 8.4 0 0 1 9.6 3.8a8.4 8.4 0 1 0 10.6 10.6z"/>
-      </svg>
-      <span class="u-visually-hidden">Switch colour theme</span>
+<header>
+  <div class="wrap hd">
+    <a class="brand" href="index.html"><span aria-hidden="true">&#9670;</span>Mashalakh Mamedov</a>
+    <button class="navtoggle" type="button" id="navtoggle" aria-expanded="false" aria-controls="primary-nav">
+      <span class="navtoggle__bars" aria-hidden="true"></span>
+      <span class="u-visually-hidden">Menu</span>
     </button>
-      <button class="masthead__toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
-        <span class="masthead__toggle-bars" aria-hidden="true"></span>
-        <span class="u-visually-hidden">Menu</span>
-      </button>
-    </div>
-    <nav class="masthead__nav" id="primary-nav" aria-label="Primary">
-      <a href="index.html#projects">Projects</a>
+    <nav id="primary-nav" aria-label="Primary">
       <a href="index.html#about">About</a>
-      <a href="index.html#experience">Experience</a>
+      <a href="index.html#work">Projects</a>
       <a href="index.html#skills">Skills</a>
+      <a href="index.html#experience">Experience</a>
       <a href="index.html#contact">Contact</a>
-      <a class="masthead__cv" href="assets/files/Mashalakh_Mamedov_CV.pdf" download>CV</a>
     </nav>
   </div>
 </header>
 
-<main id="main">
+<div class="view" id="v-robo">
+<main class="wrap" id="main">
 
-<article class="case">
-  <header class="case__head">
-    <div class="shell shell--narrow">
-      <nav class="crumbs" aria-label="Breadcrumb">
-        <a href="index.html">Projects</a><span aria-hidden="true"> / </span><span>Robotics · CAD dynamics</span>
-      </nav>
-      <p class="kicker">Robotics · CAD dynamics</p>
-      <h1 class="case__title">RoboLatte — UR5e Dynamic Simulation</h1>
-      <p class="case__subtitle">Autodesk Inventor CAD dynamics, cross-checked against an analytical MATLAB model</p>
-      
-<aside class="summary" aria-label="Case study summary">
-  <dl class="summary__list">
-    <div class="summary__row">
-      <dt>Problem</dt>
-      <dd>Model a UR5e preparing a latte in a structured workspace and work the task down to joint torques, then check whether two different modelling routes give comparable answers for the same physical motion.</dd>
-    </div>
-    <div class="summary__row">
-      <dt>My contribution</dt>
-      <dd>Two-person project. I was primarily responsible for the Autodesk Inventor workstream: the UR5e assembly, imposed cubic motions on all six joints, the Dynamic Simulation setup and the driving-force extraction. I also contributed to the shared MATLAB work, while my teammate led most of the MATLAB kinematics, trajectory generation and inverse dynamics.</dd>
-    </div>
-    <div class="summary__row summary__row--result">
-      <dt>Main result</dt>
-      <dd>Five of the six joints match in sign and order of magnitude between the two tools. Joint 3 is a clear outlier and Joint 2 differs by roughly 57 %, so this is a screening comparison rather than evidence of physical feasibility.</dd>
-    </div>
-    <div class="summary__row">
-      <dt>What I learned</dt>
-      <dd>Two tools do not share conventions or assumptions by default. Most of the work was making the comparison legitimate — a joint-angle offset mapping, matching trajectory profiles, consistent units — and then being clear that approximate link inertias are a plausible rather than a demonstrated cause of the remaining gap.</dd>
-    </div>
-    <div class="summary__row summary__row--nature">
-      <dt>Project nature</dt>
-      <dd>Two-person MSc project · Simulation and CAD only · January 2026</dd>
-    </div>
-  </dl>
-</aside>
-      <dl class="case__context">
-        <div><dt>Course</dt><dd>MSc Robot Mechanics</dd></div>
-        <div><dt>Institution</dt><dd>University of Rome Tor Vergata</dd></div>
-        <div><dt>Date</dt><dd>January 2026</dd></div>
-        <div><dt>Team</dt><dd>Two-person project. I was primarily responsible for the Autodesk Inventor workstream</dd></div>
-        <div><dt>Nature</dt><dd>Simulation and CAD only</dd></div>
-      </dl>
-    </div>
-  </header>
+  <a class="back" href="index.html#work">&larr; All work</a>
 
-  <figure class="case__hero">
-    <div class="shell">
-      <div class="framed framed--hero">
-        <img
-        class="case__heroimg"
-        src="assets/images/robolatte__inventor_driving_force_output_grapher-1400.webp"
-        srcset="assets/images/robolatte__inventor_driving_force_output_grapher-640.webp 640w, assets/images/robolatte__inventor_driving_force_output_grapher-960.webp 960w, assets/images/robolatte__inventor_driving_force_output_grapher-1400.webp 1400w"
-        sizes="(max-width: 1100px) 100vw, 1100px"
-        width="1400"
-        height="695"
-        loading="eager"
-        decoding="async"
-        alt="Output Grapher plot showing several joint driving-force curves over time.">
-      </div>
-      <figcaption>Inventor Output Grapher — joint driving-force curves over the first second of motion. These are the raw N·mm values I extracted and converted to N·m for the cross-tool comparison.</figcaption>
-    </div>
-  </figure>
-
-  <div class="shell">
-    <dl class="metrics metrics--case">
-      <div class="metric"><dt class="metric__value">6 joints</dt><dd class="metric__label">driven by imposed cubic ramp motions in Inventor</dd></div>
-<div class="metric"><dt class="metric__value">30.41 N·m</dt><dd class="metric__label">Joint 2 driving force, Inventor, t = 4 s (my result)</dd></div>
-<div class="metric"><dt class="metric__value">3 N</dt><dd class="metric__label">end-effector payload representing cup and latte</dd></div>
+  <div class="phead">
+    <p class="pk">03 · Robotics · CAD dynamics</p>
+    <h1>RoboLatte, UR5e Dynamic Simulation</h1>
+    <p class="lede">Model a UR5e preparing a latte and work the task down to joint torques. The engineering question underneath it: does the same physical motion give comparable answers when it is modelled two different ways?</p>
+    <dl class="meta">
+      <div><dt>Course</dt><dd>MSc Robot Mechanics</dd></div>
+      <div><dt>Date</dt><dd>January 2026</dd></div>
+      <div><dt>Team</dt><dd>Two-person. I owned the Inventor workstream</dd></div>
+      <div><dt>Nature</dt><dd>Simulation and CAD only</dd></div>
     </dl>
   </div>
 
-  <div class="shell shell--narrow case__body">
-    
-<section class="case__block js-reveal" id="problem" aria-labelledby="problem-heading">
-  <p class="case__blocklabel">01</p>
-  <h2 class="case__blockheading" id="problem-heading">Problem</h2>
-  <div class="prose"><p>Model a UR5e preparing a latte in a structured workspace — pick up a cup, position it under an espresso outlet, position it under a milk dispenser, serve — and work the task down to joint torques, to show it is reachable, feasible and inside the robot's actuator envelope.</p>
-<p>The engineering question underneath it: does the same physical motion give comparable answers when it is modelled two different ways?</p></div>
-</section>
+  <div class="pbody">
+    <section class="blk">
+      <figure class="hfig"><img src="assets/images/robolatte__ur5e_clean-1120.webp" srcset="assets/images/robolatte__ur5e_clean-1120.webp 1120w" sizes="(max-width: 1060px) 100vw, 1004px" width="1120" height="860" loading="eager" decoding="async" alt="UR5e assembly at a task pose in Autodesk Inventor">
+        <figcaption><span class="fig">FIG 01</span><span>UR5e assembly at a task pose, built and constrained by me in Autodesk Inventor. Basis for the dynamic simulation.</span></figcaption></figure>
+    </section>
+    <section class="blk">
+      <div class="videowrap">
+        <video controls preload="none" width="1100" height="620" poster="assets/images/robolatte__simulation_poster-1000.webp">
+          <source src="assets/media/robolatte_simulation.mp4" type="video/mp4">
+        </video>
+      </div>
+      <figcaption><span class="fig">VIDEO</span><span>The full task simulated in Autodesk Inventor Dynamic Simulation: cup pickup, espresso outlet, milk dispenser, serve. 65 seconds, no audio.</span></figcaption>
+    </section>
+    <section class="blk">
+      <div class="callout"><p class="lab">Headline result</p>
+        <p>Five of the six joints agree in sign and order of magnitude between the two tools. <b>Joint 3 is a clear outlier.</b> Reported rather than smoothed over.</p></div>
+    </section>
+    <section class="blk">
+      <h2>What the project was given</h2>
+      <p>The task was fixed by the brief: pick up a cup, hold it under an espresso outlet, then under a milk dispenser, and serve. Five stations were laid out on the robot's circular reach envelope with explicit coordinates, and the UR5e was selected over an Omron TM5-900 and a FANUC CRX-5iA before any modelling started.</p>
+      <p>The motion was fixed too. An 8 s trajectory built from four 2 s segments, sampled at 50 ms, with the cup and latte together modelled as a payload of about 0.30 kg applied as 3 N downward at the end effector. The course model assumed a ± 50 N·m actuator envelope.</p>
+      <p>One given shapes the whole comparison. Universal Robots publishes a full inertia tensor only for Link 6, so the analytical model had to use generic diagonal inertia values for Links 1 to 5, while the CAD model used full geometry. The two models were never working from the same mass properties.</p>
+    </section>
+    <section class="blk">
+      <h2>What the goal was</h2>
+      <p>Not numerical agreement. The report states plainly that exact agreement is not expected between analytical inverse dynamics and a damped forward CAD simulation, so the standard set for the comparison was consistent sign and comparable order of magnitude, and whether peak torque demand sits inside the assumed actuator envelope.</p>
+      <p>No tolerance was defined in advance for how far apart the two tools were allowed to be.</p>
+    </section>
+    <section class="blk">
+      <h2>What I did</h2>
+      <p>I was primarily responsible for the Autodesk Inventor workstream. I built and constrained the UR5e assembly, defined imposed cubic ramp motions on all six revolute joints to match the planned trajectory, and configured the Dynamic Simulation environment: gravity as an explicit vector (g_z = −9810 mm/s²), CAD-derived link mass and inertia properties, and a 3 N end-effector payload for the cup and latte.</p>
+      <p>I then extracted joint driving forces from the Output Grapher at three instants and unit-converted them from N·mm to N·m so the two toolchains produced directly comparable quantities.</p>
+      <p><b>The MATLAB kinematics, trajectory and analytical inverse dynamics are my teammate's work.</b></p>
+    </section>
+    <section class="blk">
+      <div class="two">
+        <figure class="hfig"><img src="assets/images/robolatte__inventor_imposed_joint_motion_cubic_ramp-900.webp" srcset="assets/images/robolatte__inventor_imposed_joint_motion_cubic_ramp-640.webp 640w, assets/images/robolatte__inventor_imposed_joint_motion_cubic_ramp-900.webp 900w" sizes="(max-width: 880px) 100vw, 487px" width="900" height="706" loading="lazy" decoding="async" alt="Imposed cubic ramp motion defined on a revolute joint in Inventor">
+        <figcaption><span class="fig">FIG 02</span><span>An imposed cubic ramp motion on one revolute joint. Driving the CAD model this way, rather than animating it by hand, is what makes it follow the same trajectory profile the analytical side planned.</span></figcaption></figure>
+        <figure class="hfig"><img src="assets/images/robolatte__inventor_dynamic_sim_gravity_setup-819.webp" srcset="assets/images/robolatte__inventor_dynamic_sim_gravity_setup-640.webp 640w, assets/images/robolatte__inventor_dynamic_sim_gravity_setup-819.webp 819w" sizes="(max-width: 880px) 100vw, 487px" width="819" height="741" loading="lazy" decoding="async" alt="Dynamic Simulation gravity vector setup in Inventor">
+        <figcaption><span class="fig">FIG 03</span><span>Gravity entered as an explicit vector component rather than left at a default, alongside the CAD-derived mass and inertia properties the simulation runs on.</span></figcaption></figure>
+      </div>
+    </section>
+    <section class="blk">
+      <h2>What went wrong, and the fix</h2>
+      <p>The two tools did not share a joint-angle convention. The same physical pose reads as a different set of joint angles in each, for example 151.32° in Inventor against 146.07° in MATLAB for one configuration. Until that is reconciled, putting the two torque columns side by side compares two different robot poses and the whole exercise is meaningless.</p>
+      <p>I derived an offset-based mapping between the conventions and applied it before any comparison was made. It is unglamorous alignment work, and it is the reason the numbers below can be read against each other at all. No trade-off was recorded for it.</p>
+    </section>
+    <section class="blk">
+      <h2>What the result was</h2>
+      <p>At t = 4 s my Inventor result for Joint 2 is <span class="mono">30.4052 N·m</span> against <span class="mono">47.6764 N·m</span> from the analytical model. Across the sampled instants five of the six joints agree in sign and order of magnitude. Joint 2 differs by roughly 57 % and Joint 3 by nearly a factor of two.</p>
+      <p>Measured against the ± 50 N·m envelope assumed in the course model, the analytical peak of ≈ 47.7 N·m leaves very little nominal margin. Because the two models disagree materially, that reading is a screening comparison and not evidence of physical feasibility.</p>
+    </section>
+    <section class="blk">
+      <div class="two">
+        <figure class="hfig"><img src="assets/images/robolatte__inventor_driving_force_output_grapher-1400.webp" srcset="assets/images/robolatte__inventor_driving_force_output_grapher-640.webp 640w, assets/images/robolatte__inventor_driving_force_output_grapher-960.webp 960w, assets/images/robolatte__inventor_driving_force_output_grapher-1400.webp 1400w" sizes="(max-width: 880px) 100vw, 487px" width="1400" height="695" loading="lazy" decoding="async" alt="Inventor Output Grapher driving force curves">
+        <figcaption><span class="fig">FIG 04</span><span>Output Grapher driving-force curves over the first second. The raw N·mm values I extracted.</span></figcaption></figure>
+        <figure class="hfig"><img src="assets/images/robolatte__matlab_vs_inventor_joint_torques-800.webp" srcset="assets/images/robolatte__matlab_vs_inventor_joint_torques-640.webp 640w, assets/images/robolatte__matlab_vs_inventor_joint_torques-800.webp 800w" sizes="(max-width: 880px) 100vw, 487px" width="800" height="1029" loading="lazy" decoding="async" alt="Joint torques, MATLAB against Inventor">
+        <figcaption><span class="fig">FIG 05</span><span>Joint torques at t = 4 s, N·m. My Inventor results against my teammate's MATLAB analytical inverse dynamics. (Source image omits unit and time labels.)</span></figcaption></figure>
+      </div>
+    </section>
+    <section class="blk">
+      <h2>What was not overcome</h2>
+      <p>Joint 3 has no established cause. Approximate link inertias, different gravity and payload handling between the two toolchains, and sampling only three instants are all plausible explanations, and no sensitivity study was run to isolate any of them. Naming one would be a guess, so the disagreement stays open.</p>
+    </section>
+    <section class="blk">
+      <h2>Scope and limitations</h2>
+      <ul class="limits">
+        <li>Simulation and CAD only. No physical UR5e, no sensors, no real latte. Nothing here was built or tested on a robot.</li>
+        <li><b>This is not close agreement between the two tools, and it is not presented as such.</b> Joint 2 differs by roughly 57 % (47.68 against 30.41 N·m) and Joint 3 by nearly a factor of two.</li>
+        <li>Approximate link inertias, differing gravity and payload handling between the toolchains, and sampling only three instants are all candidate explanations for the discrepancy. None was isolated by a sensitivity study.</li>
+        <li>Against the ± 50 N·m envelope assumed in the course model, the MATLAB peak of ≈ 47.7 N·m leaves little nominal margin. Because the two models disagree materially, this is a screening comparison, not evidence of physical feasibility.</li>
+        <li>Force sensing was specified as a proposal only. No sensor was integrated or calibrated.</li>
+      </ul>
+    </section>
 
-    
-<section class="case__block js-reveal" id="ownership" aria-labelledby="ownership-heading">
-  <p class="case__blocklabel">02</p>
-  <h2 class="case__blockheading" id="ownership-heading">What I contributed</h2>
-  <div class="prose"><p class="credit credit--mine"><span class="credit__label">My responsibility</span>I was primarily responsible for the Autodesk Inventor workstream. I built and constrained the UR5e assembly, defined imposed cubic ramp motions on all six revolute joints to match the planned trajectory, configured the Dynamic Simulation environment — gravity as an explicit vector (g_z = −9810 mm/s²), CAD-derived link mass and inertia properties, a 3 N end-effector payload for the cup and latte — and extracted the joint driving forces from the <code>Output Grapher</code> at t = 1 s, 4 s and 6 s, converting them from N·mm to N·m. The Inventor column of every torque comparison in the report is my output. I also contributed to the shared MATLAB analysis.</p><p class="credit credit--theirs"><span class="credit__label">Teammate's responsibility</span>My teammate led most of the MATLAB work: the <code>rigidBodyTree</code>, forward and inverse kinematics, trajectory generation and analytical inverse dynamics. I contributed to that shared analysis rather than implementing it. We prepared and presented together and were examined on both halves.</p><p class="credit credit--team"><span class="credit__label">Result belonging to the whole team</span>The workspace layout, the cross-tool torque comparison and the report are the joint result of both workstreams. We prepared and presented together.</p></div>
-</section>
-
-    
-<section class="case__block js-reveal" id="method" aria-labelledby="method-heading">
-  <p class="case__blocklabel">03</p>
-  <h2 class="case__blockheading" id="method-heading">Method</h2>
-  <div class="prose"><ol class="steps"><li>The team decomposed latte preparation into four operations — cup pickup and placement, coffee pouring, milk pouring, serving — each with explicit sensor checks and alarm branches, and laid five stations out on a circular workspace around the robot base with explicit coordinates.</li>
-<li>The UR5e was selected over an Omron TM5-900 and a FANUC CRX-5iA.</li>
-<li>My teammate built the six-revolute-joint <code>rigidBodyTree</code> from standard DH parameters matching the manufacturer's link geometry, solved inverse kinematics for the four station poses with warm starts so the arm follows a continuous branch, and generated a cubic polynomial trajectory through five waypoints at t = 0, 2, 4, 6, 8 s sampled at 50 ms.</li>
-<li>On my side: the Inventor assembly, imposed cubic joint motions on all six joints, gravity and CAD-derived inertias, the 3 N payload, and Dynamic Simulation runs producing driving-force curves.</li>
-<li>Torques were then compared at t = 1 s, 4 s and 6 s: my Inventor forward dynamic simulation against my teammate's MATLAB analytical inverse dynamics.</li></ol></div>
-</section>
-
-    
-<section class="case__block js-reveal" id="result" aria-labelledby="result-heading">
-  <p class="case__blocklabel">04</p>
-  <h2 class="case__blockheading" id="result-heading">Result</h2>
-  <div class="prose"><p>Five of the six joints agree in sign and order of magnitude between the two tools. Joint 3 is a clear outlier.</p>
-<p>Against the ±50 N·m envelope assumed in the course model, the MATLAB peak of ≈ 47.7 N·m leaves little nominal margin. Because the two models disagree materially and the link inertias are approximate, this is a screening comparison, not evidence of physical feasibility.</p></div>
-</section>
-
-    
-<section class="case__block js-reveal" id="diagnosis" aria-labelledby="diagnosis-heading">
-  <p class="case__blocklabel">05</p>
-  <h2 class="case__blockheading" id="diagnosis-heading">Cross-model discrepancy</h2>
-  <div class="prose"><p>Before any comparison was meaningful, the two environments had to be made comparable. Inventor and MATLAB do not share a joint-angle convention — the same physical pose reads as 151.32° in one and 146.07° in the other.</p>
-<p>The different inertia representations are one plausible contributor to the remaining discrepancy, but I did not run a sensitivity study, so the cause is not established conclusively. MATLAB computes inverse dynamics analytically from manually entered link masses with generic diagonal inertia approximations, because Universal Robots publishes a full inertia tensor only for Link 6. Inventor runs forward dynamics on full CAD geometry with internal damping, friction and constraint stabilisation.</p></div>
-</section>
-
-    
-<section class="case__block js-reveal" id="resolution" aria-labelledby="resolution-heading">
-  <p class="case__blocklabel">06</p>
-  <h2 class="case__blockheading" id="resolution-heading">How I made the models comparable</h2>
-  <div class="prose"><p>I derived an offset-based joint mapping so a given robot configuration means the same thing in both tools, and drove the CAD model with imposed cubic motions rather than animating it by hand, so the Inventor simulation follows the same trajectory profile the analytical model planned. I unit-converted the extracted driving forces from N·mm to N·m so the two toolchains produced directly comparable quantities.</p>
-<p>Rather than reporting an aggregate mismatch, the report isolates Joint 3, which carries all distal link weight plus the payload, and explains what is and is not known about the discrepancy. Approximate link inertias, differing gravity and payload handling between the toolchains, and sampling only three instants are all candidate explanations. None was isolated by a sensitivity study. The report also sets the right expectation up front: exact numerical agreement is not expected between analytical inverse dynamics and a damped forward CAD simulation, so trend and relative magnitude are what get evaluated.</p></div>
-</section>
-
-    
-<section class="case__block js-reveal" id="limitations" aria-labelledby="limitations-heading">
-  <p class="case__blocklabel">07</p>
-  <h2 class="case__blockheading" id="limitations-heading">Scope and limitations</h2>
-  <div class="prose"><ul class="bullets bullets--limits"><li>Simulation and CAD only. No physical UR5e, no sensors, no real latte. Nothing here was built or tested on a robot.</li>
-<li>This is not close agreement between the two tools, and it is not presented as such. Joint 2 differs by roughly 57 % (47.68 against 30.41 N·m) and Joint 3 by nearly a factor of two. The supportable claim is consistent sign and comparable order of magnitude on five of six joints, with Joint 3 a clear outlier.</li>
-<li>Link inertias are approximations. Only Link 6 uses the manufacturer's tensor; Links 1–5 use generic diagonal values. This is a plausible contributor to the mismatch, not a demonstrated cause — no sensitivity study was run.</li>
-<li>Torques were compared at three sampled instants, not across the full trajectory.</li>
-<li>Force sensing is a proposal in the report, not an implementation. No sensor was integrated or calibrated.</li>
-<li>The MATLAB kinematics, trajectory generation and inverse dynamics are my teammate's implementation.</li></ul></div>
-</section>
+    <nav class="nextp" aria-label="Other projects">
+      <a href="fire-smoke-segmentation.html">&larr; Fire and Smoke Semantic Segmentation</a>
+      <a href="eco-driving-energy.html">Next: V2V-Inspired Eco-Driving Energy Analysis &rarr;</a>
+    </nav>
   </div>
-
-  <section class="case__gallery js-reveal" id="evidence" aria-labelledby="evidence-heading">
-    <div class="shell">
-      <p class="case__blocklabel">08</p>
-      <h2 class="case__blockheading" id="evidence-heading">Evidence</h2>
-      <div class="gallery">
-        <figure class="figure">
-          <button class="figure__zoom framed" type="button" data-caption="UR5e assembly in Autodesk Inventor at a task pose — the CAD model I built and constrained, and the basis for the dynamic simulation." aria-label="Enlarge figure: CAD render of a six-axis UR5e robot arm assembly posed over a work surface in Autodesk Inventor.">
-            <img
-        class=""
-        src="assets/images/robolatte__inventor_ur5e_assembly_pose-800.webp"
-        srcset="assets/images/robolatte__inventor_ur5e_assembly_pose-640.webp 640w, assets/images/robolatte__inventor_ur5e_assembly_pose-800.webp 800w"
-        sizes="(max-width: 800px) 100vw, 46vw"
-        width="800"
-        height="1068"
-        loading="eager"
-        decoding="async"
-        alt="CAD render of a six-axis UR5e robot arm assembly posed over a work surface in Autodesk Inventor.">
-            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
-          </button>
-          <figcaption>UR5e assembly in Autodesk Inventor at a task pose — the CAD model I built and constrained, and the basis for the dynamic simulation.</figcaption>
-        </figure>
-<figure class="figure">
-          <button class="figure__zoom framed" type="button" data-caption="Imposed motion definition for one revolute joint — a cubic ramp from 151.32° to 146.074° over the first two-second segment. All six joints were driven this way so the CAD simulation follows the same trajectory profile as the analytical model." aria-label="Enlarge figure: Autodesk Inventor imposed motion dialog showing a cubic ramp profile between two joint angles.">
-            <img
-        class=""
-        src="assets/images/robolatte__inventor_imposed_joint_motion_cubic_ramp-900.webp"
-        srcset="assets/images/robolatte__inventor_imposed_joint_motion_cubic_ramp-640.webp 640w, assets/images/robolatte__inventor_imposed_joint_motion_cubic_ramp-900.webp 900w"
-        sizes="(max-width: 800px) 100vw, 46vw"
-        width="900"
-        height="706"
-        loading="eager"
-        decoding="async"
-        alt="Autodesk Inventor imposed motion dialog showing a cubic ramp profile between two joint angles.">
-            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
-          </button>
-          <figcaption>Imposed motion definition for one revolute joint — a cubic ramp from 151.32° to 146.074° over the first two-second segment. All six joints were driven this way so the CAD simulation follows the same trajectory profile as the analytical model.</figcaption>
-        </figure>
-<figure class="figure">
-          <button class="figure__zoom framed" type="button" data-caption="Dynamic Simulation setup: gravity applied as an explicit vector component (g_z = −9810 mm/s²) so all computed joint reactions reflect real operating conditions under the cup-and-latte payload." aria-label="Enlarge figure: Autodesk Inventor gravity configuration dialog with a vertical vector component entered.">
-            <img
-        class=""
-        src="assets/images/robolatte__inventor_dynamic_sim_gravity_setup-819.webp"
-        srcset="assets/images/robolatte__inventor_dynamic_sim_gravity_setup-640.webp 640w, assets/images/robolatte__inventor_dynamic_sim_gravity_setup-819.webp 819w"
-        sizes="(max-width: 800px) 100vw, 46vw"
-        width="819"
-        height="741"
-        loading="lazy"
-        decoding="async"
-        alt="Autodesk Inventor gravity configuration dialog with a vertical vector component entered.">
-            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
-          </button>
-          <figcaption>Dynamic Simulation setup: gravity applied as an explicit vector component (g_z = −9810 mm/s²) so all computed joint reactions reflect real operating conditions under the cup-and-latte payload.</figcaption>
-        </figure>
-<figure class="figure">
-          <button class="figure__zoom framed" type="button" data-caption="Inventor Output Grapher — joint driving-force curves over the first second of motion. These are the raw N·mm values I extracted and converted to N·m for the cross-tool comparison." aria-label="Enlarge figure: Output Grapher plot showing several joint driving-force curves over time.">
-            <img
-        class=""
-        src="assets/images/robolatte__inventor_driving_force_output_grapher-1400.webp"
-        srcset="assets/images/robolatte__inventor_driving_force_output_grapher-640.webp 640w, assets/images/robolatte__inventor_driving_force_output_grapher-960.webp 960w, assets/images/robolatte__inventor_driving_force_output_grapher-1400.webp 1400w"
-        sizes="(max-width: 800px) 100vw, 46vw"
-        width="1400"
-        height="695"
-        loading="lazy"
-        decoding="async"
-        alt="Output Grapher plot showing several joint driving-force curves over time.">
-            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
-          </button>
-          <figcaption>Inventor Output Grapher — joint driving-force curves over the first second of motion. These are the raw N·mm values I extracted and converted to N·m for the cross-tool comparison.</figcaption>
-        </figure>
-<figure class="figure">
-          <button class="figure__zoom framed" type="button" data-caption="Joint torques at t = 4 s, in N·m: my Inventor Dynamic Simulation results against my teammate's MATLAB analytical inverse dynamics. Five joints agree in sign and order of magnitude; Joint 3 does not. MATLAB used approximate link inertias where Inventor used full CAD geometry, which is one plausible contributor, but no sensitivity study was run. (The source image omits the unit and time labels.)" aria-label="Enlarge figure: Table comparing MATLAB and Inventor joint torque values for six joints.">
-            <img
-        class=""
-        src="assets/images/robolatte__matlab_vs_inventor_joint_torques-800.webp"
-        srcset="assets/images/robolatte__matlab_vs_inventor_joint_torques-640.webp 640w, assets/images/robolatte__matlab_vs_inventor_joint_torques-800.webp 800w"
-        sizes="(max-width: 800px) 100vw, 46vw"
-        width="800"
-        height="1029"
-        loading="lazy"
-        decoding="async"
-        alt="Table comparing MATLAB and Inventor joint torque values for six joints.">
-            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
-          </button>
-          <figcaption>Joint torques at t = 4 s, in N·m: my Inventor Dynamic Simulation results against my teammate's MATLAB analytical inverse dynamics. Five joints agree in sign and order of magnitude; Joint 3 does not. MATLAB used approximate link inertias where Inventor used full CAD geometry, which is one plausible contributor, but no sensitivity study was run. (The source image omits the unit and time labels.)</figcaption>
-        </figure>
-<figure class="figure">
-          <button class="figure__zoom framed" type="button" data-caption="My teammate's workstream, shown for project context: MATLAB inverse-kinematics solutions at the four task poses — cup pickup, espresso machine, milk dispenser, serving." aria-label="Enlarge figure: Four MATLAB plots showing the robot arm posed at each of the four task stations.">
-            <img
-        class=""
-        src="assets/images/robolatte__matlab_inverse_kinematics_four_stations-1162.webp"
-        srcset="assets/images/robolatte__matlab_inverse_kinematics_four_stations-640.webp 640w, assets/images/robolatte__matlab_inverse_kinematics_four_stations-960.webp 960w, assets/images/robolatte__matlab_inverse_kinematics_four_stations-1162.webp 1162w"
-        sizes="(max-width: 800px) 100vw, 46vw"
-        width="1162"
-        height="882"
-        loading="lazy"
-        decoding="async"
-        alt="Four MATLAB plots showing the robot arm posed at each of the four task stations.">
-            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
-          </button>
-          <figcaption>My teammate's workstream, shown for project context: MATLAB inverse-kinematics solutions at the four task poses — cup pickup, espresso machine, milk dispenser, serving.</figcaption>
-        </figure>
-      </div>
-      
-      <p class="note">Source code, models and CAD files for this project are not published. I am happy to walk through them on request.</p>
-    </div>
-  </section>
-
-  <nav class="pagenav" aria-label="Other projects">
-    <div class="shell pagenav__inner">
-      <a class="pagenav__link pagenav__link--prev" href="fire-smoke-segmentation.html"><span class="pagenav__dir">Previous</span><span class="pagenav__title">Fire and Smoke Semantic Segmentation</span></a>
-      <a class="pagenav__link pagenav__link--next" href="eco-driving-energy.html"><span class="pagenav__dir">Next</span><span class="pagenav__title">V2V-Inspired Eco-Driving Energy Analysis</span></a>
-    </div>
-  </nav>
-
-  <section class="section section--contact">
-    <div class="shell shell--narrow">
-      <h2 class="section__title">Get in touch</h2>
-      <p class="contact__lede">Six months preferred; 6–12 months workable. Based in Rome, willing to relocate throughout Europe — Germany, the Netherlands and Denmark included.</p>
-      <div class="contact__actions">
-        <a class="btn btn--primary btn--lg" href="mailto:mashalakh.mamedov1@gmail.com">mashalakh.mamedov1@gmail.com</a>
-        <a class="btn btn--lg" href="https://www.linkedin.com/in/mashalakh/" rel="me noopener">LinkedIn</a>
-        <a class="btn btn--lg" href="assets/files/Mashalakh_Mamedov_CV.pdf" download>Download CV (PDF)</a>
-      </div>
-    </div>
-  </section>
-</article>
 
 </main>
 
-<footer class="footer">
-  <div class="shell footer__inner">
-    <div class="footer__col">
-      <p class="footer__name">Mashalakh Mamedov</p>
-      <p class="footer__meta">Rome, Italy · Available for 6–12 month internships from October 2026 · Open to relocation across Europe</p>
-    </div>
-    <div class="footer__col footer__links">
-      <a href="mailto:mashalakh.mamedov1@gmail.com">mashalakh.mamedov1@gmail.com</a>
-      <a href="tel:+393447816935">+39 344 781 6935</a>
-      <a href="https://www.linkedin.com/in/mashalakh/" rel="me noopener">linkedin.com/in/mashalakh</a>
-      <a href="assets/files/Mashalakh_Mamedov_CV.pdf" download>CV (PDF)</a>
-    </div>
-    <p class="footer__legal">
-      Segmentation overlays are derived from the Roboflow “Fire and Smoke Segmentation”
-      dataset, used under <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener">CC BY 4.0</a>.
-      All other figures are my own or my project team's output. Last updated 2026-08-11.
-    </p>
+<footer class="wrap">
+  <div>Mashalakh Mamedov · Rome, Italy</div>
+  <div class="footlinks">
+    <a class="lnk" href="mailto:mashalakh.mamedov1@gmail.com">Email</a>
+    <a class="lnk" href="https://www.linkedin.com/in/mashalakh/" rel="me noopener">LinkedIn</a>
+    <a class="lnk" href="https://github.com/MashalakhMamedov" rel="me noopener">GitHub</a>
+    <a class="lnk" href="assets/files/Mashalakh_Mamedov_CV.pdf" download>CV (PDF)</a>
   </div>
+  <p class="footlegal">Segmentation overlays are derived from the Roboflow &quot;Fire and Smoke Segmentation&quot; dataset, used under <a class="lnk" href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">CC BY 4.0</a>. All other figures are my own or my project team's output. Last updated 2026-08-27.</p>
 </footer>
-
-<dialog class="lightbox" id="lightbox" aria-label="Enlarged figure">
-  <button class="lightbox__close" type="button" aria-label="Close figure">&times;</button>
-  <div class="lightbox__stage"></div>
-  <p class="lightbox__caption"></p>
-</dialog>
+</div>
 
 <script src="scripts/site.js" defer></script>
 </body>

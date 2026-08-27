@@ -1,427 +1,159 @@
 <!DOCTYPE html>
-<html lang="en-GB" data-theme="dark">
+<html lang="en-GB">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script>(function(){try{var s=localStorage.getItem('theme');var t=(s==='light'||s==='dark')?s:(window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
-<title>Remotely Operated Mobile Manipulator — Arduino Integration · Mashalakh Mamedov</title>
+<title>Remotely Controlled Robotic Manipulator: Arduino Integration · Mashalakh Mamedov</title>
 <meta name="description" content="Case study: a four-person BSc senior-design project integrating a commercial 4-axis arm onto a self-built 4WD Arduino platform over a 2.4 GHz link, including the supply-sag diagnosis fixed by splitting the power domains.">
 <meta name="author" content="Mashalakh Mamedov">
 <meta name="google-site-verification" content="W-Y71ul96LOj-eBEKb1GOZ6LM0tuA-P7PGZmfWH5ZF4">
-<meta name="color-scheme" content="dark light">
-<meta name="theme-color" content="#0e141b" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0D0F12">
 <link rel="canonical" href="https://mashalakhmamedov.github.io/mobile-manipulator.html">
 
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Mashalakh Mamedov">
-<meta property="og:title" content="Remotely Operated Mobile Manipulator — Arduino Integration · Mashalakh Mamedov">
+<meta property="og:title" content="Remotely Controlled Robotic Manipulator: Arduino Integration · Mashalakh Mamedov">
 <meta property="og:description" content="Case study: a four-person BSc senior-design project integrating a commercial 4-axis arm onto a self-built 4WD Arduino platform over a 2.4 GHz link, including the supply-sag diagnosis fixed by splitting the power domains.">
 <meta property="og:url" content="https://mashalakhmamedov.github.io/mobile-manipulator.html">
 <meta property="og:locale" content="en_GB">
 <meta property="og:image" content="https://mashalakhmamedov.github.io/assets/images/manipulator__assembled_system_multiview-1251.webp">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Mashalakh Mamedov — Mechatronics MSc Candidate">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Remotely Operated Mobile Manipulator — Arduino Integration · Mashalakh Mamedov">
+<meta property="og:image:width" content="1251">
+<meta property="og:image:height" content="984">
+<meta property="og:image:alt" content="Remotely Controlled Robotic Manipulator: Embedded · Hardware integration">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Remotely Controlled Robotic Manipulator: Arduino Integration · Mashalakh Mamedov">
 <meta name="twitter:description" content="Case study: a four-person BSc senior-design project integrating a commercial 4-axis arm onto a self-built 4WD Arduino platform over a 2.4 GHz link, including the supply-sag diagnosis fixed by splitting the power domains.">
 <meta name="twitter:image" content="https://mashalakhmamedov.github.io/assets/images/manipulator__assembled_system_multiview-1251.webp">
-<meta name="twitter:image:alt" content="Mashalakh Mamedov — Mechatronics MSc Candidate">
+<meta name="twitter:image:alt" content="Remotely Controlled Robotic Manipulator: Embedded · Hardware integration">
 
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<script>document.documentElement.className="js"</script>
 <link rel="stylesheet" href="styles/site.css">
 </head>
-<body class="is-case">
+<body>
 <a class="skip-link" href="#main">Skip to content</a>
 
-<div class="deco deco--left" aria-hidden="true"><svg class="deco__svg" viewBox="0 0 160 900" fill="none" preserveAspectRatio="xMidYMin slice" aria-hidden="true" focusable="false">
-  <g stroke="currentColor" stroke-width="1.1" stroke-linecap="square">
-    <path d="M18 30 V120 L58 160 V236 H120 V300"/>
-    <path d="M142 40 V96 L104 134 V210"/>
-    <path d="M18 150 H74 L104 180 V262"/>
-    <path d="M142 240 V286 L112 316 V352 H40"/>
-    <path d="M18 330 V392 L66 440"/>
-    <path d="M142 372 V430 H96"/>
-  </g>
-  <g fill="currentColor">
-    <circle cx="18" cy="30" r="3"/><circle cx="58" cy="160" r="3"/>
-    <circle cx="120" cy="300" r="3"/><circle cx="104" cy="134" r="3"/>
-    <circle cx="104" cy="262" r="3"/><circle cx="112" cy="316" r="3"/>
-    <circle cx="66" cy="440" r="3"/><circle cx="96" cy="430" r="3"/>
-  </g>
-
-  <!-- simplified closed-loop control diagram -->
-  <g stroke="currentColor" stroke-width="1.1" fill="none">
-    <circle cx="30" cy="560" r="11"/>
-    <path d="M25 560 H35 M30 555 V565"/>
-    <path d="M4 560 H19"/>
-    <path d="M41 560 H62"/>
-    <rect x="62" y="544" width="42" height="32" rx="2"/>
-    <path d="M104 560 H126"/>
-    <rect x="126" y="544" width="30" height="32" rx="2"/>
-    <path d="M141 576 V614 H30 V571"/>
-    <path d="M70 556 h26 M70 564 h18"/>
-    <path d="M133 556 h16 M133 564 h10"/>
-  </g>
-
-  <g stroke="currentColor" stroke-width="1.1" stroke-linecap="square">
-    <path d="M18 668 V740 L62 784 V860"/>
-    <path d="M142 690 V760 H100 V846"/>
-    <path d="M18 812 H62"/>
-  </g>
-  <g fill="currentColor">
-    <circle cx="62" cy="784" r="3"/><circle cx="100" cy="760" r="3"/>
-  </g>
-</svg></div>
-<div class="deco deco--right" aria-hidden="true"><svg class="deco__svg" viewBox="0 0 160 900" fill="none" preserveAspectRatio="xMidYMin slice" aria-hidden="true" focusable="false">
-  <!-- coordinate grid -->
-  <g stroke="currentColor" stroke-width="0.7" opacity="0.55">
-    <path d="M20 24 H140 M20 64 H140 M20 104 H140 M20 144 H140 M20 184 H140 M20 224 H140 M20 264 H140 M20 304 H140"/>
-    <path d="M20 24 V340 M60 24 V340 M100 24 V340 M140 24 V340"/>
-  </g>
-
-  <!-- sine trace across the grid -->
-  <g stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round">
-    <path d="M80 40 Q125 65 80 90 Q35 115 80 140 Q125 165 80 190 Q35 215 80 240 Q125 265 80 290 Q35 315 80 340"/>
-  </g>
-
-  <!-- unipolar SPWM pulse train -->
-  <g stroke="currentColor" stroke-width="1.1" fill="none" stroke-linejoin="miter">
-    <path d="M50 380 V386 H112 V390 H50 V402 H112 V406 H50 V417 H112 V423 H50 V432 H112 V440 H50 V447 H112 V457 H50 V463 H112 V473 H50 V478 H112 V490 H50 V494 H112 V506 H50 V509 H112 V523 H50 V525 H112 V539 H50 V541 H112 V555 H50 V557 H112 V571 H50 V574 H112 V586 H50 V590 H112 V602 H50 V607 H112 V617 H50 V623 H112 V633 H50 V640 H112 V648 H50 V657 H112 V663 H50 V674 H112 V678 H50 V690 H112 V694 H50 V700"/>
-  </g>
-
-  <!-- robotic coordinate frame -->
-  <g stroke="currentColor" stroke-width="1.1" fill="none">
-    <path d="M40 840 H132 M40 840 V752"/>
-    <path d="M40 840 L96 784"/>
-    <path d="M132 840 l-8 -4 M132 840 l-8 4"/>
-    <path d="M40 752 l-4 8 M40 752 l4 8"/>
-    <path d="M96 784 l-2 9 M96 784 l-9 2"/>
-    <circle cx="40" cy="840" r="3.5" fill="currentColor" stroke="none"/>
-    <path d="M40 800 a40 40 0 0 1 40 40" stroke-dasharray="3 5"/>
-  </g>
-</svg></div>
-
-<header class="masthead">
-  <div class="shell masthead__inner">
-    <a class="masthead__id" href="index.html">
-      <span class="masthead__name">Mashalakh Mamedov</span>
-      <span class="masthead__role">Mechatronics MSc Candidate</span>
-    </a>
-    <div class="masthead__controls">
-      <button class="themetoggle" type="button" id="theme-toggle" aria-label="Switch colour theme" title="Switch colour theme">
-      <svg class="themetoggle__icon themetoggle__icon--sun" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true" focusable="false">
-        <circle cx="12" cy="12" r="4.2"/>
-        <path d="M12 2.6v2.2M12 19.2v2.2M21.4 12h-2.2M4.8 12H2.6M18.6 5.4l-1.6 1.6M7 17l-1.6 1.6M18.6 18.6L17 17M7 7L5.4 5.4"/>
-      </svg>
-      <svg class="themetoggle__icon themetoggle__icon--moon" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-        <path d="M20.2 14.4A8.4 8.4 0 0 1 9.6 3.8a8.4 8.4 0 1 0 10.6 10.6z"/>
-      </svg>
-      <span class="u-visually-hidden">Switch colour theme</span>
+<header>
+  <div class="wrap hd">
+    <a class="brand" href="index.html"><span aria-hidden="true">&#9670;</span>Mashalakh Mamedov</a>
+    <button class="navtoggle" type="button" id="navtoggle" aria-expanded="false" aria-controls="primary-nav">
+      <span class="navtoggle__bars" aria-hidden="true"></span>
+      <span class="u-visually-hidden">Menu</span>
     </button>
-      <button class="masthead__toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
-        <span class="masthead__toggle-bars" aria-hidden="true"></span>
-        <span class="u-visually-hidden">Menu</span>
-      </button>
-    </div>
-    <nav class="masthead__nav" id="primary-nav" aria-label="Primary">
-      <a href="index.html#projects">Projects</a>
+    <nav id="primary-nav" aria-label="Primary">
       <a href="index.html#about">About</a>
-      <a href="index.html#experience">Experience</a>
+      <a href="index.html#work">Projects</a>
       <a href="index.html#skills">Skills</a>
+      <a href="index.html#experience">Experience</a>
       <a href="index.html#contact">Contact</a>
-      <a class="masthead__cv" href="assets/files/Mashalakh_Mamedov_CV.pdf" download>CV</a>
     </nav>
   </div>
 </header>
 
-<main id="main">
+<div class="view" id="v-man">
+<main class="wrap" id="main">
 
-<article class="case">
-  <header class="case__head">
-    <div class="shell shell--narrow">
-      <nav class="crumbs" aria-label="Breadcrumb">
-        <a href="index.html">Projects</a><span aria-hidden="true"> / </span><span>Embedded · Hardware integration</span>
-      </nav>
-      <p class="kicker">Embedded · Hardware integration</p>
-      <h1 class="case__title">Remotely Operated Mobile Manipulator</h1>
-      <p class="case__subtitle">Arduino and 2.4 GHz wireless integration of a 4-axis arm on a 4WD platform</p>
-      
-<aside class="summary" aria-label="Case study summary">
-  <dl class="summary__list">
-    <div class="summary__row">
-      <dt>Problem</dt>
-      <dd>Integrate a commercial 4-axis desktop arm with a self-built 4WD mobile platform into one system an operator drives wirelessly by joystick, with a 3D-printed gripper as the end effector.</dd>
-    </div>
-    <div class="summary__row">
-      <dt>My contribution</dt>
-      <dd>Four-person BSc senior-design team with no documented individual task split. I contributed to the Arduino control software, system integration, troubleshooting and the technical report. Everything below is therefore described as team work.</dd>
-    </div>
-    <div class="summary__row summary__row--result">
-      <dt>Main result</dt>
-      <dd>A working integrated system: the commercial arm on the self-built platform, driven end to end from a handheld controller over a 2.4 GHz link, with a printed gripper fitted.</dd>
-    </div>
-    <div class="summary__row">
-      <dt>What I learned</dt>
-      <dd>The hardest fault was electrical rather than mechanical. Motor current pulled the shared supply down and reset the microcontroller, and the resets tracked motor load rather than program state, which pointed at the supply rather than the firmware. Splitting the power domains fixed it.</dd>
-    </div>
-    <div class="summary__row summary__row--nature">
-      <dt>Project nature</dt>
-      <dd>Four-person BSc team project · Physical hardware · 2023</dd>
-    </div>
-  </dl>
-</aside>
-      <dl class="case__context">
-        <div><dt>Course</dt><dd>BSc Senior Design Project</dd></div>
-        <div><dt>Institution</dt><dd>Ivane Javakhishvili Tbilisi State University</dd></div>
-        <div><dt>Date</dt><dd>2023</dd></div>
-        <div><dt>Team</dt><dd>Four-person team</dd></div>
-        <div><dt>Nature</dt><dd>Physical hardware</dd></div>
-      </dl>
-    </div>
-  </header>
+  <a class="back" href="index.html#work">&larr; All work</a>
 
-  <figure class="case__hero">
-    <div class="shell">
-      <div class="framed framed--hero">
-        <img
-        class="case__heroimg"
-        src="assets/images/manipulator__assembled_system_multiview-1251.webp"
-        srcset="assets/images/manipulator__assembled_system_multiview-640.webp 640w, assets/images/manipulator__assembled_system_multiview-960.webp 960w, assets/images/manipulator__assembled_system_multiview-1251.webp 1251w"
-        sizes="(max-width: 1100px) 100vw, 1100px"
-        width="1251"
-        height="984"
-        loading="eager"
-        decoding="async"
-        alt="Five photographs of an assembled mobile robot with a four-axis arm mounted on a wheeled chassis.">
-      </div>
-      <figcaption>The completed remotely operated mobile manipulator from five angles: the commercial 4-axis arm mounted on the DIY 4WD platform with the 3D-printed gripper fitted and the electronics stack on the deck.</figcaption>
-    </div>
-  </figure>
-
-  <div class="shell">
-    <dl class="metrics metrics--case">
-      <div class="metric"><dt class="metric__value">4-axis arm</dt><dd class="metric__label">commercial unit integrated onto a DIY 4WD platform</dd></div>
-<div class="metric"><dt class="metric__value">2.4 GHz</dt><dd class="metric__label">NRF24L01 link, selected over Wi-Fi and Bluetooth alternatives</dd></div>
-<div class="metric"><dt class="metric__value">2 supplies</dt><dd class="metric__label">separated motor and logic power domains</dd></div>
+  <div class="phead">
+    <p class="pk">05 · Embedded · Hardware integration</p>
+    <h1>Remotely Controlled Robotic Manipulator</h1>
+    <p class="lede">BSc senior design. Integrate a commercial 4-axis desktop arm with a self-built 4WD mobile platform into one system an operator drives wirelessly by joystick, with a 3D-printed gripper as the end effector.</p>
+    <dl class="meta">
+      <div><dt>Course</dt><dd>BSc Senior Design Project</dd></div>
+      <div><dt>Date</dt><dd>2023</dd></div>
+      <div><dt>Team</dt><dd>Four-person team</dd></div>
+      <div><dt>Nature</dt><dd>Physical hardware</dd></div>
     </dl>
   </div>
 
-  <div class="shell shell--narrow case__body">
-    
-<section class="case__block js-reveal" id="problem" aria-labelledby="problem-heading">
-  <p class="case__blocklabel">01</p>
-  <h2 class="case__blockheading" id="problem-heading">Problem</h2>
-  <div class="prose"><p>Build a remotely operated mobile manipulator: integrate a commercial 4-axis desktop robotic arm with a DIY 4WD mobile platform into one system a human operator drives wirelessly by joystick, with a custom 3D-printed gripper as the end effector.</p></div>
-</section>
+  <div class="pbody">
+    <section class="blk">
+      <figure class="hfig"><img src="assets/images/manipulator__assembled_system_multiview-1251.webp" srcset="assets/images/manipulator__assembled_system_multiview-640.webp 640w, assets/images/manipulator__assembled_system_multiview-960.webp 960w, assets/images/manipulator__assembled_system_multiview-1251.webp 1251w" sizes="(max-width: 1060px) 100vw, 1004px" width="1251" height="984" loading="eager" decoding="async" alt="Assembled mobile manipulator, several views">
+        <figcaption><span class="fig">FIG 01</span><span>The assembled system: a commercial 4-axis arm on a self-built 4WD platform with a 3D-printed gripper.</span></figcaption></figure>
+    </section>
+    <section class="blk">
+      <div class="callout"><p class="lab">What I claim, and what I do not</p>
+        <p>I contributed across the Arduino control software in C++, system integration and troubleshooting, and to the technical report. The four-way task split was never documented, so everything on this page is described as team work.</p></div>
+    </section>
+    <section class="blk">
+      <h2>What the project was given</h2>
+      <p>Four people, one semester, at Tbilisi State University in 2023. The brief was to put a commercial 4-axis desktop arm onto a self-built 4WD platform and make the whole thing drivable by a single operator over a wireless link.</p>
+      <p>The arm was a purchased commercial unit and stayed that way. The platform, the drive electronics, the control software and the gripper are the team's work. The parts on the bench were an Arduino Uno at the transmitter and an Arduino Mega on the vehicle, an L298N dual H-bridge for the four drive motors, servos on the arm joints, joystick modules, 18650 cells, and a 3D printer for the gripper.</p>
+    </section>
+    <section class="blk">
+      <h2>What the goal was</h2>
+      <p>The brief was to build and operate the integrated system. No target was set for positional accuracy, range, payload or response time, so there is no threshold for the outcome below to be read against.</p>
+    </section>
+    <section class="blk">
+      <h2>What the team did</h2>
+      <p>The build ran as an eight-stage sequence, and each subsystem was made to work before it was integrated into the next one: servos driven from potentiometers before joystick control, joystick control before the wireless link, and the wireless link proven before the arm was mounted on the platform. That ordering is the reason faults stayed findable.</p>
+      <p>The wireless layer was chosen rather than defaulted into. NRF24L01 2.4 GHz modules were selected over an ESP-01 Wi-Fi module and an HC-06 Bluetooth module, on range and Arduino compatibility.</p>
+      <p>The gripper was designed and 3D-printed by the team because nothing off the shelf fitted the arm's end effector.</p>
+      <p>I contributed to the Arduino control software in C++, to system integration and troubleshooting, and to the technical report. Which subsystem belonged to which of the four of us was never written down at the time, so nothing here is attributed to one person.</p>
+    </section>
+    <section class="blk">
+      <div class="two">
+        <figure class="hfig"><img src="assets/images/manipulator__mobile_platform_wiring_l298n-773.webp" srcset="assets/images/manipulator__mobile_platform_wiring_l298n-640.webp 640w, assets/images/manipulator__mobile_platform_wiring_l298n-773.webp 773w" sizes="(max-width: 880px) 100vw, 487px" width="773" height="606" loading="lazy" decoding="async" alt="The 4WD platform mid-build with motors wired to the L298N driver">
+        <figcaption><span class="fig">FIG 02</span><span>The platform mid-build: four DC gear motors wired to the L298N dual H-bridge, with the Arduino Mega and power distribution laid out on the chassis deck.</span></figcaption></figure>
+        <figure class="hfig"><img src="assets/images/manipulator__remote_control_protoboard-692.webp" srcset="assets/images/manipulator__remote_control_protoboard-640.webp 640w, assets/images/manipulator__remote_control_protoboard-692.webp 692w" sizes="(max-width: 880px) 100vw, 487px" width="692" height="817" loading="lazy" decoding="async" alt="Handheld transmitter assembled on protoboard">
+        <figcaption><span class="fig">FIG 03</span><span>The handheld transmitter on protoboard: two joystick modules and an NRF24L01 with its external antenna, driven by an Arduino Uno.</span></figcaption></figure>
+      </div>
+    </section>
+    <section class="blk">
+      <h2>What went wrong, and the fix</h2>
+      <p>The defining problem on this project was electrical, not mechanical. With the motors running, current draw pulled the supply voltage down far enough that the Arduino behaved unpredictably and reset. A robot that reboots when it accelerates looks like a control fault, and chasing it as one would have cost us the semester.</p>
+      <p>We traced it to the motors and the logic sharing a single supply, and split the power domains with a second battery, so motor transients no longer reach the microcontroller. The system ran reliably afterwards. FIG 05 is the receiver-side schematic and the two separate batteries in it are the fix.</p>
+    </section>
+    <section class="blk">
+      <div class="two">
+        <figure class="hfig"><img src="assets/images/manipulator__3d_printed_gripper-552.webp" srcset="assets/images/manipulator__3d_printed_gripper-552.webp 552w" sizes="(max-width: 880px) 100vw, 487px" width="552" height="668" loading="lazy" decoding="async" alt="The 3D-printed gripper with its servo mounted">
+        <figcaption><span class="fig">FIG 04</span><span>The custom gripper with its servo mounted, printed by the team because no off-the-shelf part fitted the arm's end effector.</span></figcaption></figure>
+        <figure class="hfig"><img src="assets/images/manipulator__receiver_circuit_diagram-1100.webp" srcset="assets/images/manipulator__receiver_circuit_diagram-640.webp 640w, assets/images/manipulator__receiver_circuit_diagram-960.webp 960w, assets/images/manipulator__receiver_circuit_diagram-1100.webp 1100w" sizes="(max-width: 880px) 100vw, 487px" width="1100" height="1030" loading="lazy" decoding="async" alt="Receiver-side schematic showing two separate batteries">
+        <figcaption><span class="fig">FIG 05</span><span>Receiver side on the vehicle: Arduino Mega, the radio module, the L298N, four DC motors, the arm servos, and the two separate batteries that ended the resets.</span></figcaption></figure>
+      </div>
+    </section>
+    <section class="blk">
+      <h2>What the result was</h2>
+      <p>The integrated system worked end to end: an operator drove the platform and the arm from a handheld controller over the 2.4 GHz link, and the gripper picked things up.</p>
+      <p>It was never characterised in numbers. The report contains an experimental chapter describing a method for positional accuracy, repeatability and response time, but reports no values for any of them. The one chapter carrying numbers is the power budget, and its figures contradict each other, so nothing from it is published here.</p>
+    </section>
+    <section class="blk">
+      <h2>What was not overcome</h2>
+      <p>Accuracy and latency, the two numbers a robotics reader would want first, were never produced, and the hardware is no longer available to go back and measure them.</p>
+      <p>The report also names a wireless standard for the link that the radio module does not implement. That claim is wrong and is not repeated here.</p>
+    </section>
+    <section class="blk">
+      <h2>Scope and limitations</h2>
+      <ul class="limits">
+        <li><b>No measured accuracy, latency or power figure is published.</b> The system worked; it was never characterised in a way that produced usable numbers.</li>
+        <li>Four-person team with no documented task split. Everything is described as team work.</li>
+        <li>The 4-axis arm was a commercial unit. The team integrated it, it did not design it.</li>
+        <li>Open-loop operator control throughout. No autonomy, no sensing and no feedback control.</li>
+        <li>2023 work, and the oldest project on this site by three years.</li>
+      </ul>
+    </section>
 
-    
-<section class="case__block js-reveal" id="ownership" aria-labelledby="ownership-heading">
-  <p class="case__blocklabel">02</p>
-  <h2 class="case__blockheading" id="ownership-heading">What I contributed</h2>
-  <div class="prose"><p class="credit credit--mine"><span class="credit__label">My responsibility</span>I contributed across the Arduino-based control software, system integration and troubleshooting, and to the technical report. The individual task split was never documented, so no part of the build is claimed individually.</p><p class="credit credit--theirs"><span class="credit__label">Teammate's responsibility</span>This was a four-person senior-design team and the individual task split is not documented, so everything below is described as team work. The arm itself was a purchased commercial unit — only the gripper, the mobile-platform integration, the electronics and the control software are the team's own.</p><p class="credit credit--team"><span class="credit__label">Result belonging to the whole team</span>The completed system is a four-person team result. No individual task split is documented, so no part of the build is claimed individually.</p></div>
-</section>
-
-    
-<section class="case__block js-reveal" id="method" aria-labelledby="method-heading">
-  <p class="case__blocklabel">03</p>
-  <h2 class="case__blockheading" id="method-heading">Method</h2>
-  <div class="prose"><ol class="steps"><li>The build ran as eight staged steps: materials evaluation and procurement, robot car assembly, servo testing and calibration on potentiometers, joystick control testing for the arm, development of the remote-control system, assembly of the remaining components on the platform, mounting the arm, and gripper design and 3D printing.</li>
-<li>Each subsystem was verified before integration — servos on potentiometers before joysticks, joystick control before wireless, wireless before mounting the arm to the base.</li>
-<li>The wireless link was chosen by comparison rather than by default: NRF24L01 2.4 GHz modules over ESP-01 Wi-Fi and HC-06 Bluetooth, on range and Arduino compatibility grounds.</li>
-<li>Control ran on an Arduino Uno at the handheld transmitter and an Arduino Mega on the vehicle, driving four DC motors through an L298N dual H-bridge and the arm servos.</li>
-<li>The team designed and 3D-printed a custom gripper, since nothing off the shelf fitted the arm's end effector.</li></ol></div>
-</section>
-
-    
-<section class="case__block js-reveal" id="result" aria-labelledby="result-heading">
-  <p class="case__blocklabel">04</p>
-  <h2 class="case__blockheading" id="result-heading">Result</h2>
-  <div class="prose"><p>A working integrated system: a commercial 4-axis arm mounted on a self-built 4WD platform, driven end to end from a handheld joystick controller over a 2.4 GHz link, with a printed gripper as the end effector.</p></div>
-</section>
-
-    
-<section class="case__block js-reveal" id="diagnosis" aria-labelledby="diagnosis-heading">
-  <p class="case__blocklabel">05</p>
-  <h2 class="case__blockheading" id="diagnosis-heading">Integration issue</h2>
-  <div class="prose"><p>The most instructive problem was electrical rather than mechanical. With the motors running, current draw caused the supply voltage to sag and the Arduino to behave unpredictably and reset.</p>
-<p>The symptom pointed at the shared supply rather than at the firmware: the resets tracked motor load, not program state.</p></div>
-</section>
-
-    
-<section class="case__block js-reveal" id="resolution" aria-labelledby="resolution-heading">
-  <p class="case__blocklabel">06</p>
-  <h2 class="case__blockheading" id="resolution-heading">What I changed</h2>
-  <div class="prose"><p>The team split the power domains, adding a second battery so the high-current motor loads are isolated from the microcontroller and logic supply. Motor transients no longer reached the logic rail and the system ran reliably.</p></div>
-</section>
-
-    
-<section class="case__block js-reveal" id="limitations" aria-labelledby="limitations-heading">
-  <p class="case__blocklabel">07</p>
-  <h2 class="case__blockheading" id="limitations-heading">Scope and limitations</h2>
-  <div class="prose"><ul class="bullets bullets--limits"><li>Team project with no documented individual task split. Hardware accomplishments are described as team work throughout.</li>
-<li>The arm was a commercial unit, not designed by the team.</li>
-<li>No measured accuracy, repeatability, latency or power-consumption results are claimed. The report's experimental chapter describes the method for accuracy, repeatability and latency but reports no values, and its power figures are no-load estimates containing an internal arithmetic inconsistency.</li>
-<li>Open-loop operator control. No autonomy, no sensing, no feedback control.</li>
-<li>2023 work — it predates the MATLAB/Simulink modelling that the rest of this portfolio is built on.</li></ul></div>
-</section>
+    <nav class="nextp" aria-label="Other projects">
+      <a href="eco-driving-energy.html">&larr; V2V-Inspired Eco-Driving Energy Analysis</a>
+      <a href="index.html#work">All work &rarr;</a>
+    </nav>
   </div>
-
-  <section class="case__gallery js-reveal" id="evidence" aria-labelledby="evidence-heading">
-    <div class="shell">
-      <p class="case__blocklabel">08</p>
-      <h2 class="case__blockheading" id="evidence-heading">Evidence</h2>
-      <div class="gallery">
-        <figure class="figure">
-          <button class="figure__zoom framed" type="button" data-caption="The completed remotely operated mobile manipulator from five angles: the commercial 4-axis arm mounted on the DIY 4WD platform with the 3D-printed gripper fitted and the electronics stack on the deck." aria-label="Enlarge figure: Five photographs of an assembled mobile robot with a four-axis arm mounted on a wheeled chassis.">
-            <img
-        class=""
-        src="assets/images/manipulator__assembled_system_multiview-1251.webp"
-        srcset="assets/images/manipulator__assembled_system_multiview-640.webp 640w, assets/images/manipulator__assembled_system_multiview-960.webp 960w, assets/images/manipulator__assembled_system_multiview-1251.webp 1251w"
-        sizes="(max-width: 800px) 100vw, 46vw"
-        width="1251"
-        height="984"
-        loading="eager"
-        decoding="async"
-        alt="Five photographs of an assembled mobile robot with a four-axis arm mounted on a wheeled chassis.">
-            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
-          </button>
-          <figcaption>The completed remotely operated mobile manipulator from five angles: the commercial 4-axis arm mounted on the DIY 4WD platform with the 3D-printed gripper fitted and the electronics stack on the deck.</figcaption>
-        </figure>
-<figure class="figure">
-          <button class="figure__zoom framed" type="button" data-caption="The custom gripper, designed by the team and 3D printed, with its servo mounted. Off-the-shelf grippers did not fit the arm's end effector." aria-label="Enlarge figure: Close-up photograph of a 3D-printed two-finger gripper with a servo attached.">
-            <img
-        class=""
-        src="assets/images/manipulator__3d_printed_gripper-552.webp"
-        srcset="assets/images/manipulator__3d_printed_gripper-552.webp 552w"
-        sizes="(max-width: 800px) 100vw, 46vw"
-        width="552"
-        height="668"
-        loading="eager"
-        decoding="async"
-        alt="Close-up photograph of a 3D-printed two-finger gripper with a servo attached.">
-            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
-          </button>
-          <figcaption>The custom gripper, designed by the team and 3D printed, with its servo mounted. Off-the-shelf grippers did not fit the arm's end effector.</figcaption>
-        </figure>
-<figure class="figure">
-          <button class="figure__zoom framed" type="button" data-caption="The 4WD platform mid-build: four DC gear motors wired to an L298N dual H-bridge driver, with the Arduino Mega and power distribution laid out on the chassis deck." aria-label="Enlarge figure: Photograph of a four-wheel-drive chassis with motor wiring, an L298N driver board and an Arduino.">
-            <img
-        class=""
-        src="assets/images/manipulator__mobile_platform_wiring_l298n-773.webp"
-        srcset="assets/images/manipulator__mobile_platform_wiring_l298n-640.webp 640w, assets/images/manipulator__mobile_platform_wiring_l298n-773.webp 773w"
-        sizes="(max-width: 800px) 100vw, 46vw"
-        width="773"
-        height="606"
-        loading="lazy"
-        decoding="async"
-        alt="Photograph of a four-wheel-drive chassis with motor wiring, an L298N driver board and an Arduino.">
-            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
-          </button>
-          <figcaption>The 4WD platform mid-build: four DC gear motors wired to an L298N dual H-bridge driver, with the Arduino Mega and power distribution laid out on the chassis deck.</figcaption>
-        </figure>
-<figure class="figure">
-          <button class="figure__zoom framed" type="button" data-caption="The handheld transmitter assembled on protoboard — two joystick modules and an NRF24L01 module with its external antenna, driven by an Arduino Uno." aria-label="Enlarge figure: Photograph of a handheld transmitter built on protoboard with two joysticks and a radio module.">
-            <img
-        class=""
-        src="assets/images/manipulator__remote_control_protoboard-692.webp"
-        srcset="assets/images/manipulator__remote_control_protoboard-640.webp 640w, assets/images/manipulator__remote_control_protoboard-692.webp 692w"
-        sizes="(max-width: 800px) 100vw, 46vw"
-        width="692"
-        height="817"
-        loading="lazy"
-        decoding="async"
-        alt="Photograph of a handheld transmitter built on protoboard with two joysticks and a radio module.">
-            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
-          </button>
-          <figcaption>The handheld transmitter assembled on protoboard — two joystick modules and an NRF24L01 module with its external antenna, driven by an Arduino Uno.</figcaption>
-        </figure>
-<figure class="figure">
-          <button class="figure__zoom framed" type="button" data-caption="Transmitter wiring schematic: dual joysticks and the NRF24L01 radio on an Arduino Uno, with the 9 V supply." aria-label="Enlarge figure: Circuit schematic of the transmitter showing joysticks, radio module and Arduino connections.">
-            <img
-        class=""
-        src="assets/images/manipulator__transmitter_circuit_diagram-881.webp"
-        srcset="assets/images/manipulator__transmitter_circuit_diagram-640.webp 640w, assets/images/manipulator__transmitter_circuit_diagram-881.webp 881w"
-        sizes="(max-width: 800px) 100vw, 46vw"
-        width="881"
-        height="691"
-        loading="lazy"
-        decoding="async"
-        alt="Circuit schematic of the transmitter showing joysticks, radio module and Arduino connections.">
-            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
-          </button>
-          <figcaption>Transmitter wiring schematic: dual joysticks and the NRF24L01 radio on an Arduino Uno, with the 9 V supply.</figcaption>
-        </figure>
-<figure class="figure">
-          <button class="figure__zoom framed" type="button" data-caption="Receiver-side schematic on the vehicle: Arduino Mega, NRF24L01, L298N motor driver, four DC motors, arm servos, and the two separate batteries — the split power domain that fixed the supply-sag resets." aria-label="Enlarge figure: Circuit schematic of the vehicle-side electronics showing two separate battery supplies.">
-            <img
-        class=""
-        src="assets/images/manipulator__receiver_circuit_diagram-1100.webp"
-        srcset="assets/images/manipulator__receiver_circuit_diagram-640.webp 640w, assets/images/manipulator__receiver_circuit_diagram-960.webp 960w, assets/images/manipulator__receiver_circuit_diagram-1100.webp 1100w"
-        sizes="(max-width: 800px) 100vw, 46vw"
-        width="1100"
-        height="1030"
-        loading="lazy"
-        decoding="async"
-        alt="Circuit schematic of the vehicle-side electronics showing two separate battery supplies.">
-            <span class="figure__zoomicon" aria-hidden="true">⤢</span>
-          </button>
-          <figcaption>Receiver-side schematic on the vehicle: Arduino Mega, NRF24L01, L298N motor driver, four DC motors, arm servos, and the two separate batteries — the split power domain that fixed the supply-sag resets.</figcaption>
-        </figure>
-      </div>
-      
-      <p class="note">Source code, models and CAD files for this project are not published. I am happy to walk through them on request.</p>
-    </div>
-  </section>
-
-  <nav class="pagenav" aria-label="Other projects">
-    <div class="shell pagenav__inner">
-      <a class="pagenav__link pagenav__link--prev" href="eco-driving-energy.html"><span class="pagenav__dir">Previous</span><span class="pagenav__title">V2V-Inspired Eco-Driving Energy Analysis</span></a>
-      <span class="pagenav__empty"></span>
-    </div>
-  </nav>
-
-  <section class="section section--contact">
-    <div class="shell shell--narrow">
-      <h2 class="section__title">Get in touch</h2>
-      <p class="contact__lede">Six months preferred; 6–12 months workable. Based in Rome, willing to relocate throughout Europe — Germany, the Netherlands and Denmark included.</p>
-      <div class="contact__actions">
-        <a class="btn btn--primary btn--lg" href="mailto:mashalakh.mamedov1@gmail.com">mashalakh.mamedov1@gmail.com</a>
-        <a class="btn btn--lg" href="https://www.linkedin.com/in/mashalakh/" rel="me noopener">LinkedIn</a>
-        <a class="btn btn--lg" href="assets/files/Mashalakh_Mamedov_CV.pdf" download>Download CV (PDF)</a>
-      </div>
-    </div>
-  </section>
-</article>
 
 </main>
 
-<footer class="footer">
-  <div class="shell footer__inner">
-    <div class="footer__col">
-      <p class="footer__name">Mashalakh Mamedov</p>
-      <p class="footer__meta">Rome, Italy · Available for 6–12 month internships from October 2026 · Open to relocation across Europe</p>
-    </div>
-    <div class="footer__col footer__links">
-      <a href="mailto:mashalakh.mamedov1@gmail.com">mashalakh.mamedov1@gmail.com</a>
-      <a href="tel:+393447816935">+39 344 781 6935</a>
-      <a href="https://www.linkedin.com/in/mashalakh/" rel="me noopener">linkedin.com/in/mashalakh</a>
-      <a href="assets/files/Mashalakh_Mamedov_CV.pdf" download>CV (PDF)</a>
-    </div>
-    <p class="footer__legal">
-      Segmentation overlays are derived from the Roboflow “Fire and Smoke Segmentation”
-      dataset, used under <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener">CC BY 4.0</a>.
-      All other figures are my own or my project team's output. Last updated 2026-08-11.
-    </p>
+<footer class="wrap">
+  <div>Mashalakh Mamedov · Rome, Italy</div>
+  <div class="footlinks">
+    <a class="lnk" href="mailto:mashalakh.mamedov1@gmail.com">Email</a>
+    <a class="lnk" href="https://www.linkedin.com/in/mashalakh/" rel="me noopener">LinkedIn</a>
+    <a class="lnk" href="https://github.com/MashalakhMamedov" rel="me noopener">GitHub</a>
+    <a class="lnk" href="assets/files/Mashalakh_Mamedov_CV.pdf" download>CV (PDF)</a>
   </div>
+  <p class="footlegal">Segmentation overlays are derived from the Roboflow &quot;Fire and Smoke Segmentation&quot; dataset, used under <a class="lnk" href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">CC BY 4.0</a>. All other figures are my own or my project team's output. Last updated 2026-08-27.</p>
 </footer>
-
-<dialog class="lightbox" id="lightbox" aria-label="Enlarged figure">
-  <button class="lightbox__close" type="button" aria-label="Close figure">&times;</button>
-  <div class="lightbox__stage"></div>
-  <p class="lightbox__caption"></p>
-</dialog>
+</div>
 
 <script src="scripts/site.js" defer></script>
 </body>
