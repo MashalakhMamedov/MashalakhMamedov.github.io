@@ -354,3 +354,9 @@ header{background:var(--bg)}
 @media (max-width:820px){
 .view::before{display:none}
 }
+
+/* ---------- SUPPORT PAGE (customer-support.html) ---------- */
+#v-support .phead{padding-top:40px}
+.blk .job:first-of-type{border-top:none;padding-top:6px}
+.blk .btns{margin-top:18px}
+.aslink{margin:18px 0 0;font-size:14.5px}
